@@ -1,3 +1,62 @@
+## v0.3.0-beta.3
+
+[compare changes](https://github.com/myshkouski/nitro-drizzle/compare/v0.3.0-beta.2...v0.3.0-beta.3)
+
+### 🚀 Enhancements
+
+- **tests:** Allow passing custom config to legacy nitro builder ([04571ff](https://github.com/myshkouski/nitro-drizzle/commit/04571ff))
+- **runtime:** Support async datasource factory functions ([1c10a3b](https://github.com/myshkouski/nitro-drizzle/commit/1c10a3b))
+- **virtual:** Add initHooks option to runtime virtual module ([d2a47c3](https://github.com/myshkouski/nitro-drizzle/commit/d2a47c3))
+- **module:** Auto-populate initHooks from nitro cloudflare presets ([42221ef](https://github.com/myshkouski/nitro-drizzle/commit/42221ef))
+- **fixtures:** Add foreign key relation between comments and posts ([2fbc203](https://github.com/myshkouski/nitro-drizzle/commit/2fbc203))
+- **fixtures:** Add cloudflare d1 bindings to legacy nitro config ([8cc9293](https://github.com/myshkouski/nitro-drizzle/commit/8cc9293))
+- **db:** Scaffold multi-dialect drizzle configs and migrations ([1838092](https://github.com/myshkouski/nitro-drizzle/commit/1838092))
+- **drivers:** Add dialect property to datasource and drivers ([9ef59c0](https://github.com/myshkouski/nitro-drizzle/commit/9ef59c0))
+- **runtime:** Add useDialect helper to dispatch by SQL dialect ([ae1ebea](https://github.com/myshkouski/nitro-drizzle/commit/ae1ebea))
+- **drivers:** ⚠️  Introduce multi-driver support with dialect-specific handlers ([bcf2720](https://github.com/myshkouski/nitro-drizzle/commit/bcf2720))
+
+### 🩹 Fixes
+
+- **config:** Resolve helpers module path using dialect instead of driver ([467336f](https://github.com/myshkouski/nitro-drizzle/commit/467336f))
+- **context:** Support union of legacy and current ServerAssetDir types ([21d5d95](https://github.com/myshkouski/nitro-drizzle/commit/21d5d95))
+- **context:** Return empty object type when no schema imports ([e916618](https://github.com/myshkouski/nitro-drizzle/commit/e916618))
+
+### 💅 Refactors
+
+- **d1:** Move dialect implementation into dedicated d1 folder ([8fee811](https://github.com/myshkouski/nitro-drizzle/commit/8fee811))
+- **shared:** Define unified NitroHookName type for dual nitro versions ([26ad78e](https://github.com/myshkouski/nitro-drizzle/commit/26ad78e))
+- **legacy:** Trigger drizzle:init via configurable runtime hooks ([e78a171](https://github.com/myshkouski/nitro-drizzle/commit/e78a171))
+- **d1:** Constrain driver generic with shared Schema type ([1acbfc5](https://github.com/myshkouski/nitro-drizzle/commit/1acbfc5))
+- **legacy:** Eager load comments with posts in content endpoint ([7bbf93c](https://github.com/myshkouski/nitro-drizzle/commit/7bbf93c))
+- **runtime:** Use MaybePromise for provider create return ([be13ad3](https://github.com/myshkouski/nitro-drizzle/commit/be13ad3))
+- **runtime:** Rename dialect types and enforce exact handler matching ([8c60970](https://github.com/myshkouski/nitro-drizzle/commit/8c60970))
+- **drivers:** Use Schema type for driver generic constraint ([5c772b8](https://github.com/myshkouski/nitro-drizzle/commit/5c772b8))
+- **workspace:** Migrate catalog configuration to named catalogs format ([453d2db](https://github.com/myshkouski/nitro-drizzle/commit/453d2db))
+
+### 📦 Build
+
+- **blog-api:** Add nitro prepare script for offline type generation ([c5f2b9b](https://github.com/myshkouski/nitro-drizzle/commit/c5f2b9b))
+
+### 🏡 Chore
+
+- **fixtures:** Exclude .wrangler artifacts from legacy blog-api fixture ([8d7feb0](https://github.com/myshkouski/nitro-drizzle/commit/8d7feb0))
+- **module:** Import NitroHookName type from shared ([6962b33](https://github.com/myshkouski/nitro-drizzle/commit/6962b33))
+- **config:** Fix github username casing in package metadata ([a16fccc](https://github.com/myshkouski/nitro-drizzle/commit/a16fccc))
+
+### ✅ Tests
+
+- **legacy:** Allow configurable preset in legacy nitro builder ([dacfbbf](https://github.com/myshkouski/nitro-drizzle/commit/dacfbbf))
+- **drivers:** Update Datasource generic to three type parameters ([2cb4c8d](https://github.com/myshkouski/nitro-drizzle/commit/2cb4c8d))
+- **fixtures:** Update blog-api config to use driver-based datasource structure ([9f6482a](https://github.com/myshkouski/nitro-drizzle/commit/9f6482a))
+
+#### ⚠️ Breaking Changes
+
+- **drivers:** ⚠️  Introduce multi-driver support with dialect-specific handlers ([bcf2720](https://github.com/myshkouski/nitro-drizzle/commit/bcf2720))
+
+### ❤️ Contributors
+
+- Alexei Myshkouski ([@myshkouski](https://github.com/myshkouski))
+
 ## v0.3.0-beta.2
 
 [compare changes](https://github.com/Myshkouski/nitro-drizzle/compare/v0.3.0-beta.1...v0.3.0-beta.2)
