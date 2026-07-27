@@ -1,10 +1,10 @@
 import { defineNitroPlugin } from "nitropack/runtime";
 import { consola } from "consola";
 import { colorize } from "consola/utils";
-import { useDatasource } from "nitro-drizzle/runtime";
+import { useDialect } from "nitro-drizzle/runtime";
+import { onConflictDoNothing as sqliteOnConflictDoNothing } from "nitro-drizzle/dialects/sqlite";
+import { onConflictDoNothing as pgOnConflictDoNothing } from "nitro-drizzle/dialects/postgresql";
 import { usePrimaryColumns } from "nitro-drizzle/utils";
-
-import { onConflictDoNothing } from "#nitro-drizzle/dialects/users";
 
 import * as sampleData from "nitro-drizzle-sample-data/users";
 
@@ -18,10 +18,19 @@ export default defineNitroPlugin((nitro) => {
 });
 
 async function seedUsers() {
-  const { database, schema } = await useDatasource("users");
+  await useDialect("users", {
+    async postgresql({ database, schema }): Promise<void> {
+      await pgOnConflictDoNothing(
+        usePrimaryColumns(schema.authors),
+        database.insert(schema.authors).values(sampleData.authors),
+      );
+    },
 
-  await onConflictDoNothing(
-    usePrimaryColumns(schema.authors),
-    database.insert(schema.authors).values(sampleData.authors),
-  );
+    async sqlite({ database, schema }): Promise<void> {
+      await sqliteOnConflictDoNothing(
+        usePrimaryColumns(schema.authors),
+        database.insert(schema.authors).values(sampleData.authors),
+      );
+    },
+  });
 }

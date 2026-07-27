@@ -4,6 +4,7 @@ import type { DatasourceRegistry } from "nitro-drizzle/runtime";
 import { MIGRATIONS_STORAGE_BASE } from "#nitro-drizzle/migrations";
 import { useStorage } from "#nitro-drizzle/runtime";
 import type { Migration } from "./internal/migrate";
+import { useConfig } from "nitro-drizzle/runtime";
 
 /**
  * Gets the storage for a specific datasource's migrations.
@@ -11,10 +12,11 @@ import type { Migration } from "./internal/migrate";
  * @param name - The datasource name
  * @returns Storage instance for migrations
  */
-export function useMigrationsStorage<TName extends keyof DatasourceRegistry>(
+export function useMigrationsStorage<TName extends keyof DatasourceRegistry & string>(
   name: TName,
 ): Storage<string> {
-  return useStorage(`assets:${MIGRATIONS_STORAGE_BASE}:${name}`);
+  const { driver } = useConfig(name);
+  return useStorage(`assets:${MIGRATIONS_STORAGE_BASE}:${name}:${driver}`);
 }
 
 /** Storage key for the migration journal. */
@@ -27,7 +29,7 @@ export const JOURNAL_STORAGE_KEY = "meta/_journal.json" as const;
  * @returns Async iterable of migrations
  * @throws If migration journal is not found
  */
-export async function useMigrations<TName extends keyof DatasourceRegistry>(
+export async function useMigrations<TName extends keyof DatasourceRegistry & string>(
   name: TName,
 ): Promise<AsyncIterable<Migration>> {
   const storage = useMigrationsStorage(name);

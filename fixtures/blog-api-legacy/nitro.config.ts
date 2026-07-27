@@ -11,10 +11,25 @@ export default defineNitroConfig({
   runtimeConfig: {
     drizzle: {
       content: {
-        url: ":memory:",
+        driver: "sqlite",
+        sqlite: {
+          url: ":memory:",
+        },
+        d1: {
+          binding: "content",
+        },
       },
       users: {
-        dataDir: "memory://",
+        driver: "sqlite",
+        postgresql: {
+          url: "",
+        },
+        pglite: {
+          dataDir: "memory://",
+        },
+        d1: {
+          binding: "users",
+        },
       },
       // @ts-expect-error
       unknown: {},
@@ -27,10 +42,10 @@ export default defineNitroConfig({
     },
     datasources: {
       content: {
-        connector: "sqlite",
+        drivers: ["postgresql", "pglite", "sqlite", "d1"],
       },
       users: {
-        connector: "pglite",
+        drivers: ["postgresql", "pglite", "sqlite", "d1"],
       },
     },
     // @ts-expect-error

@@ -12,6 +12,7 @@ import {
   genReference,
   moduleTypeDeclarations,
   runtimeDeclarations,
+  sharedTypeDeclarations,
 } from "./internal/templates";
 import { transformDrizzleConfig } from "./internal/config";
 import {
@@ -53,19 +54,22 @@ class DefaultContext implements Context {
 
     await this.#options.plugins(this.enabledPlugins());
 
-    const [virtualModules, virtualTypes, moduleTypes, runtimeTypes] = await Promise.all([
-      this.virtualModules(datasources),
-      this.virtualTypeDeclarations(datasources),
-      this.moduleTypeDeclarations(datasources),
-      this.runtimeTypeDeclarations(datasources),
-    ]);
+    const [sharedTypes, virtualModules, virtualTypes, moduleTypes, runtimeTypes] =
+      await Promise.all([
+        sharedTypeDeclarations(datasources),
+        this.virtualModules(datasources),
+        this.virtualTypeDeclarations(datasources),
+        this.moduleTypeDeclarations(datasources),
+        this.runtimeTypeDeclarations(datasources),
+      ]);
 
     await this.#options.virtualModules(virtualModules);
 
     await this.#options.declarations({
-      virtual: virtualTypes,
+      shared: sharedTypes,
       module: moduleTypes,
       runtime: runtimeTypes,
+      virtual: virtualTypes,
     });
 
     if (this.#options.migrations) {
@@ -108,41 +112,53 @@ class DefaultContext implements Context {
         [configPattern].flat().map((pattern) => "*/" + pattern),
       );
 
-      let datasources: DatasourceInfo[] = await mapAsync(
-        drizzleConfigsResolvedPaths,
-        async (path) => {
+      const drizzleConfigs = [
+        ...(await mapAsync(drizzleConfigsResolvedPaths, async (path) => {
+          const [_, dirName] = path.match(/(.+\/(.+))\/.+$/)!.slice(1, 3) as [string, string];
           const { config } = await loadConfig<DrizzleConfig>({
             configFile: path,
           });
-          const [_, dirName] = path.match(/(.+\/(.+))\/.+$/)!.slice(1, 3) as [string, string];
 
-          const datasource = await transformDrizzleConfig(config, {
+          return await transformDrizzleConfig(config, {
             cwd: this.#options.cwd,
             path,
             dirName,
             resolver,
           });
+        })),
+      ].sort((a, b) => {
+        if (a.driver && b.driver) {
+          return 0;
+        }
+        return 1;
+      });
 
+      const datasources: DatasourceInfo[] = Object.entries(datasourceOptions).map(
+        ([name, options]) => {
           return {
-            ...datasource,
-            driver: datasourceOptions[datasource.name].connector,
-            imports: {
-              ...datasource.imports,
-              connector: `nitro-drizzle/drivers/${datasourceOptions[datasource.name].connector}`,
-            },
-          };
+            name,
+            enabled: true,
+            drivers: options.drivers.map((driverName) => {
+              const dialect = driverToDialect(driverName);
+              const drizzleConfig = drizzleConfigs.find((config) => {
+                return config.name == name && config.dialect == dialect;
+              });
+              return {
+                name: driverName,
+                dialect,
+                imports: {
+                  connector: `nitro-drizzle/drivers/${driverName}`,
+                  helpers: `nitro-drizzle/dialects/${dialect}`,
+                  schema: drizzleConfig?.imports.schema || [],
+                },
+                migrations: {
+                  ...drizzleConfig?.migrations,
+                },
+              };
+            }),
+          } satisfies DatasourceInfo;
         },
       );
-
-      datasources = Object.entries(datasourceOptions).reduce((_datasources, [name, options]) => {
-        const datasource = datasources.find(
-          (d) => d.name == name && driverToDialect(options.connector) == d.dialect,
-        );
-        if (!datasource) {
-          return _datasources;
-        }
-        return [..._datasources, datasource];
-      }, [] as DatasourceInfo[]);
 
       logger?.info(
         "Found drizzle datasources:",
@@ -173,7 +189,10 @@ class DefaultContext implements Context {
           .map((datasource) => {
             return [
               colorize("greenBright", datasource.name),
-              colorize("yellow", "(" + (datasource.driver || datasource.dialect) + ")"),
+              colorize(
+                "yellow",
+                "(" + datasource.drivers.map((driver) => driver.name).join(", ") + ")",
+              ),
             ].join(" ");
           })
           .join(", "),
@@ -194,24 +213,35 @@ class DefaultContext implements Context {
       return [];
     }
 
-    return datasources.reduce(
-      (acc, { name, migrations }) => {
-        const dir = migrations.assets;
-        if (dir) {
-          acc.push({
-            baseName: `${migrationOptions.storageBase}:${name}`,
-            dir,
-            /**
-             * @todo Doesn't work in dev mode - 'fs' driver does not support 'pattern'
-             * Disabled - include all files to use with meta/_journal.json
-             */
-            // pattern: '*.sql',
-          });
-        }
-        return acc;
-      },
-      [] as (ServerAssetDir | LegacyServerAssetDir)[],
-    );
+    return datasources
+      .flatMap((datasource) => {
+        return datasource.drivers.map((driver) => {
+          return {
+            name: datasource.name,
+            driver: driver.name,
+            dialect: driver.dialect,
+            migrations: driver.migrations,
+          };
+        });
+      })
+      .reduce(
+        (acc, { name, driver, migrations }) => {
+          const dir = migrations.assets;
+          if (dir) {
+            acc.push({
+              baseName: [migrationOptions.storageBase, name, driver].join(":"),
+              dir,
+              /**
+               * @todo Doesn't work in dev mode - 'fs' driver does not support 'pattern'
+               * Disabled - include all files to use with meta/_journal.json
+               */
+              // pattern: '*.sql',
+            });
+          }
+          return acc;
+        },
+        [] as (ServerAssetDir | LegacyServerAssetDir)[],
+      );
   }
 
   private async virtualTypeDeclarations(
@@ -357,7 +387,7 @@ export interface ContextOptions {
   /**
    * Connector options
    */
-  datasources: Record<string, { connector: string }>;
+  datasources: Record<string, { drivers: readonly string[] }>;
 
   migrations: MigrationOptions | undefined;
 
@@ -383,6 +413,7 @@ export interface ContextOptions {
   declarations: ContextHook<
     [
       declarations: {
+        shared: VirtualModules<`${string}.d.ts`>;
         module: VirtualModules<`${string}.d.ts`>;
         runtime: VirtualModules<`${string}.d.ts`>;
         virtual: Record<string, VirtualModules<`${string}.d.ts`>>;
@@ -410,26 +441,25 @@ export function createContext(options: ContextOptions): Context {
  * Information about a resolved Drizzle datasource.
  */
 export interface DatasourceInfo {
-  /** Directory name of the datasource (derived from config file location). */
-  dirName: string;
   /** Unique name identifier for the datasource. */
   name: string;
   /** Whether the datasource is enabled (filtered by connector configuration). */
   enabled: boolean;
-  /** Database dialect (e.g., 'sqlite', 'postgresql', 'mysql'). */
+  drivers: readonly DriverOptions[];
+}
+
+export type DriverOptions = {
+  name: string;
   dialect: string;
-  /** Driver type if specified in config, otherwise undefined. */
-  driver: string | undefined;
-  /** Import paths for schema, connector, and helpers. */
   imports: {
-    config: string;
-    schema: string[];
+    // config: string;
+    schema: readonly string[];
     connector: string;
     helpers: string;
   };
-  /** Migration configuration for this datasource. */
+  /** Migration configuration for this datasource driver. */
   migrations: {
     assets?: string;
     config?: Config["migrations"];
   };
-}
+};

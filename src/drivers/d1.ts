@@ -1,5 +1,5 @@
 import cloudflareD1Connector from "db0/connectors/cloudflare-d1";
-import { defineDriver, type Schema } from ".";
+import { defineConnector, type Schema } from ".";
 import type { D1Database } from "@cloudflare/workers-types";
 import type { DrizzleConfig, RelationalSchemaConfig, TablesRelationalConfig } from "drizzle-orm";
 import {
@@ -18,22 +18,23 @@ import { SELECT_1 } from "./internal/sql";
  * @param schema - The Drizzle schema
  * @returns A Datasource instance
  */
-export default defineDriver(async <TSchema extends Schema>(options: D1Options, schema: TSchema) => {
-  const connector = cloudflareD1Connector({
-    bindingName: options.binding,
-  });
-  const client = await connector.getInstance();
-  const database = drizzle(client, { schema });
-  return {
-    dialect: "sqlite",
-    database,
-    schema,
-    async waitReady() {
-      await database.run(SELECT_1);
-    },
-    async close() {},
-  };
-});
+export default defineConnector(
+  async <TSchema extends Schema>(options: D1Options, schema: TSchema) => {
+    const connector = cloudflareD1Connector({
+      bindingName: options.binding,
+    });
+    const client = await connector.getInstance();
+    const database = drizzle(client, { schema });
+    return {
+      database,
+      schema,
+      async waitReady() {
+        await database.run(SELECT_1);
+      },
+      async close() {},
+    };
+  },
+);
 
 /** Configuration options for the Cloudflare D1 driver. */
 export type D1Options = {

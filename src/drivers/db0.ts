@@ -1,5 +1,5 @@
 import { useDatabase } from "nitropack/runtime";
-import { defineDriver, type Schema } from ".";
+import { defineConnector, type Schema } from ".";
 import { drizzle } from "db0/integrations/drizzle";
 import { SELECT_1 } from "./internal/sql";
 
@@ -8,7 +8,7 @@ import { SELECT_1 } from "./internal/sql";
  * @template TSchema - The schema type
  * @returns A Datasource instance using Nitro's database configuration
  */
-export default defineDriver(<TSchema extends Schema>(options: Options, schema: TSchema) => {
+export default defineConnector(<TSchema extends Schema>(options: Options, schema: TSchema) => {
   const db0 = useDatabase(options.name);
   const database = drizzle<TSchema>(db0);
   return {

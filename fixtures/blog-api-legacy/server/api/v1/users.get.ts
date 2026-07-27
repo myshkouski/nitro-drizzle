@@ -1,8 +1,20 @@
-import { useDatasource } from "nitro-drizzle/runtime";
+import { useDialect } from "nitro-drizzle/runtime";
 
 export default defineEventHandler(async (event) => {
   await event.context.drizzle.waitReady();
-  const { database, schema } = await useDatasource("users");
-  const authors = await database.select().from(schema.authors).limit(10);
+
+  const { authors } = await useDialect("users", {
+    async sqlite({ database, schema }) {
+      return {
+        authors: await database.select().from(schema.authors).limit(10),
+      };
+    },
+    async postgresql({ database, schema }) {
+      return {
+        authors: await database.select().from(schema.authors).limit(10),
+      };
+    },
+  });
+
   return { authors };
 });

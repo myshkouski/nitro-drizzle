@@ -1,16 +1,15 @@
 import type { Config as DrizzleConfig } from "drizzle-kit";
-import type { DatasourceInfo, Resolver } from "..";
+import type { Resolver } from "..";
 import { resolve } from "pathe";
 import { genObjectKey } from "knitwork";
 
 export async function transformDrizzleConfig(
   drizzleConfig: DrizzleConfig,
   { dirName, path, resolver, cwd }: TransformDrizzleConfigOptions,
-): Promise<DatasourceInfo> {
+) {
   const driver = "driver" in drizzleConfig ? drizzleConfig.driver : undefined;
   const dialect = drizzleConfig.dialect;
   return {
-    dirName,
     name: genObjectKey(dirName.replace(DISABLED_DATASOURCE_DIRNAME_REGEX, "")),
     enabled: !DISABLED_DATASOURCE_DIRNAME_REGEX.test(dirName),
     dialect,
@@ -32,7 +31,7 @@ export async function transformDrizzleConfig(
   };
 }
 
-const DISABLED_DATASOURCE_DIRNAME_REGEX = /^[_-]+/;
+export const DISABLED_DATASOURCE_DIRNAME_REGEX = /^[_-]+/;
 
 export type TransformDrizzleConfigOptions = {
   dirName: string;

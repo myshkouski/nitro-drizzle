@@ -1,6 +1,6 @@
 import { drizzle } from "drizzle-orm/mysql2";
 import { createConnection } from "mysql2/promise";
-import { defineDriver, type Schema } from ".";
+import { defineConnector, type Schema } from ".";
 import { SELECT_1 } from "./internal/sql";
 
 /**
@@ -10,11 +10,10 @@ import { SELECT_1 } from "./internal/sql";
  * @param schema - The Drizzle schema
  * @returns A Datasource instance
  */
-export default defineDriver(async <TSchema extends Schema>(config: Options, schema: TSchema) => {
+export default defineConnector(async <TSchema extends Schema>(config: Options, schema: TSchema) => {
   const connection = await createConnection(config.url);
   const database = drizzle(connection, { schema, mode: "default" });
   return {
-    dialect: "mysql",
     database,
     schema,
     waitReady: async () => {

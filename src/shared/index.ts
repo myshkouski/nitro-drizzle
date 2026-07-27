@@ -11,3 +11,13 @@ export type MaybePromise<T> = T | Promise<T>;
 export type VirtualModules<TName extends string = string> = Record<TName, VirtualModule>;
 
 export type NitroHookName = keyof NitroRuntimeHooks | keyof LegacyNitroRuntimeHooks;
+
+export type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (
+  k: infer I,
+) => void
+  ? I
+  : never;
+
+export interface DatasourceMetadata {}
+
+export * from "./variants";

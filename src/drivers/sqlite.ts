@@ -1,6 +1,6 @@
 import sqlite3, { type Options as BetterSqlite3Options } from "better-sqlite3";
 import { drizzle } from "drizzle-orm/better-sqlite3";
-import { defineDriver, type Schema } from ".";
+import { defineConnector, type Schema } from ".";
 import { SELECT_1 } from "./internal/sql";
 
 /**
@@ -10,12 +10,11 @@ import { SELECT_1 } from "./internal/sql";
  * @param schema - The Drizzle schema
  * @returns A Datasource instance
  */
-export default defineDriver(<TSchema extends Schema>(config: Options, schema: TSchema) => {
+export default defineConnector(<TSchema extends Schema>(config: Options, schema: TSchema) => {
   const { url, ...options } = config;
   const sqlite = sqlite3(url, options);
   const database = drizzle(sqlite, { schema });
   return {
-    dialect: "sqlite",
     database,
     schema,
     async waitReady() {

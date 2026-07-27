@@ -1,4 +1,4 @@
-import type { MaybePromise } from "nitro-drizzle/shared";
+import type { MaybePromise, UnionToIntersection } from "nitro-drizzle/shared";
 
 /**
  * Schema type representing database tables.
@@ -9,21 +9,39 @@ export type Schema = Record<string, any>;
  * Factory function type for creating Drizzle datasource instances.
  * @template TDatabase - The database type
  */
-export type DatasourceDriver<TDialect extends string, TDatabase> = <TSchema extends Schema>(
-  config: any,
-  schema: TSchema,
-) => MaybePromise<Datasource<TDialect, TDatabase, TSchema>>;
+export type Connector<
+  TDialect extends string,
+  TDatabase,
+  TSchema extends Schema,
+  TConfig,
+  TDatasource extends Datasource<TDialect, TDatabase, TSchema> = Datasource<
+    TDialect,
+    TDatabase,
+    TSchema
+  >,
+> = (config: TConfig, schema: TSchema) => MaybePromise<TDatasource>;
+
+export type MergeSchema<T extends readonly Schema[], Indices extends keyof T & number> = [
+  Indices,
+] extends [never]
+  ? {}
+  : UnionToIntersection<
+      {
+        [K in Indices]: K extends keyof T ? T[K] : never;
+      }[Indices]
+    >;
 
 /**
  * Defines a driver factory function.
- * @template TFactory - The driver factory type
+ * @template TConnector - The driver factory type
  * @param create - The driver factory function
  * @returns The same driver factory function
  */
-export function defineDriver<
+export function defineConnector<
   TDialect extends string,
-  TFactory extends DatasourceDriver<TDialect, any>,
->(create: TFactory): TFactory {
+  TSchema extends Schema,
+  TConnector extends Connector<TDialect, any, TSchema, any>,
+>(create: TConnector): TConnector {
   return create;
 }
 
@@ -32,8 +50,7 @@ export function defineDriver<
  * @template TDatabase - The database client type
  * @template TSchema - The schema type
  */
-export interface Datasource<TDialect extends string, TDatabase, TSchema extends Schema> {
-  dialect: TDialect;
+export interface Datasource<_TDialect, TDatabase, TSchema extends Schema> {
   /** The database client instance. */
   database: TDatabase;
   /** The schema definition. */

@@ -5,7 +5,7 @@ import { clearCachedConfig } from "./internal/config";
 import { onServerClose } from "#nitro-drizzle/runtime";
 
 const datasources: {
-  [K in keyof Datasources & string]?: Promise<Datasources[K]>;
+  [K in keyof Datasources & string]?: Promise<Datasources[K][string]>;
 } = {};
 
 /** Options for datasource creation and lifecycle management. */
@@ -25,13 +25,13 @@ export type UseDatasourceOptions = Partial<{
 export async function useDatasource<TName extends keyof Datasources & string>(
   name: TName,
   options: UseDatasourceOptions = {},
-): Promise<Datasources[TName]> {
-  let datasourcePromise: Promise<Datasources[TName]>;
+) {
+  let datasourcePromise: Promise<Datasources[TName][string]>;
 
   if (name in datasources) {
     datasourcePromise = datasources[name]!;
   } else {
-    datasourcePromise = datasources[name] = createDatasource(name) as Datasources[TName];
+    datasourcePromise = datasources[name] = createDatasource(name);
     const { autoClose = true } = options;
     if (autoClose) {
       let removeCloseHandler: () => void;

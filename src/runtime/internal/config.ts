@@ -1,16 +1,14 @@
-import { defu } from "defu";
-import type { Datasources, DatasourceConfig } from "..";
+import { type Datasources, type DatasourceConfig, useConfig } from "..";
+import { callConfigHook } from "#nitro-drizzle/runtime";
 
-import { callConfigHook, useRuntimeConfig } from "#nitro-drizzle/runtime";
-
-const datasourceConfig: Partial<DatasourceConfig> = {};
+const datasourceConfig: Partial<{
+  [TName in keyof DatasourceConfig]: DatasourceConfig[TName][string];
+}> = {};
 
 /**
  * @internal
  */
-export async function getCachedDatasourceConfig<TName extends keyof Datasources & string>(
-  name: TName,
-) {
+export async function getDriverConfig<TName extends keyof Datasources & string>(name: TName) {
   if (name in datasourceConfig && !datasourceConfig[name]) {
     throw new Error(
       "Cannot obtain datasource config. Do you try to obtain it inside the 'drizzle:config' hook?",
@@ -18,9 +16,9 @@ export async function getCachedDatasourceConfig<TName extends keyof Datasources 
   } else {
     datasourceConfig[name] = undefined;
 
-    const runtimeConfig = useRuntimeConfig();
-    const config = defu(runtimeConfig?.[name], {});
-    await callConfigHook(name, config);
+    const { driver, config } = useConfig(name);
+
+    await callConfigHook(name, driver, config);
 
     datasourceConfig[name] = config;
   }
@@ -28,6 +26,6 @@ export async function getCachedDatasourceConfig<TName extends keyof Datasources 
   return datasourceConfig[name];
 }
 
-export function clearCachedConfig<TName extends keyof Datasources>(name: TName) {
+export function clearCachedConfig<TName extends keyof Datasources & string>(name: TName) {
   delete datasourceConfig[name];
 }

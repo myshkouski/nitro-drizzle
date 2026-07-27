@@ -1,6 +1,6 @@
 import { drizzle } from "drizzle-orm/pglite";
 import { PGlite, type PGliteOptions } from "@electric-sql/pglite";
-import { defineDriver, type Schema } from ".";
+import { defineConnector, type Schema } from ".";
 
 /**
  * PGlite datasource driver for PostgreSQL in the browser.
@@ -9,18 +9,20 @@ import { defineDriver, type Schema } from ".";
  * @param schema - The Drizzle schema
  * @returns A Datasource instance
  */
-export default defineDriver(<TSchema extends Schema>(options: PGliteOptions, schema: TSchema) => {
-  const connector = new PGlite(options);
-  const database = drizzle(connector, { schema });
-  return {
-    dialect: "postgresql",
-    database,
-    schema,
-    async waitReady() {
-      await database.$client.waitReady;
-    },
-    async close() {
-      await database.$client.close();
-    },
-  };
-});
+export default defineConnector(
+  <TSchema extends Schema>(options: PGliteOptions, schema: TSchema) => {
+    const driver = new PGlite(options);
+    const database = drizzle(driver, { schema });
+    return {
+      dialect: "postgresql",
+      database,
+      schema,
+      async waitReady() {
+        await database.$client.waitReady;
+      },
+      async close() {
+        await database.$client.close();
+      },
+    };
+  },
+);

@@ -1,6 +1,6 @@
 import { drizzle } from "drizzle-orm/postgres-js";
 import createPostgres, { type Options as PostgresOptions } from "postgres";
-import { defineDriver, type Schema } from ".";
+import { defineConnector, type Schema } from ".";
 import { SELECT_1 } from "./internal/sql";
 
 /**
@@ -10,12 +10,11 @@ import { SELECT_1 } from "./internal/sql";
  * @param schema - The Drizzle schema
  * @returns A Datasource instance
  */
-export default defineDriver(<TSchema extends Schema>(options: Options, schema: TSchema) => {
+export default defineConnector(<TSchema extends Schema>(options: Options, schema: TSchema) => {
   const { url, ...other } = options;
   const client = url ? createPostgres(url, other) : createPostgres(other);
   const database = drizzle(client, { schema });
   return {
-    dialect: "postgresql",
     database,
     schema,
     async waitReady() {

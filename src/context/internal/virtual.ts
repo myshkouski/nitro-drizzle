@@ -11,18 +11,18 @@ import type { DatasourceInfo, MigrationOptions } from "..";
 import type { VirtualModules } from "nitro-drizzle/shared";
 import { script } from "./format";
 
-function genDatasourceModuleVariableName(dbModuleIndex: number) {
+function genConnectorModuleVariableName(dbModuleIndex: number) {
   return genSafeVariableName(`dbModule${dbModuleIndex}`);
 }
 
-function genMergedSchemaVariableName(dbModuleIndex: number) {
+function genMergeSchemaVariableName(dbModuleIndex: number) {
   return genSafeVariableName(`mergedSchema${dbModuleIndex}`);
 }
 
 const genSchemaModuleVariableName = (dbModuleIndex: number, schemaIndex: number) =>
   genSafeVariableName(`schemaModule${dbModuleIndex}_${schemaIndex}`);
 
-function mergeSchemaModules(schemaIds: string[], dbModuleIndex: number) {
+function mergeSchemaModules(schemaIds: readonly string[], dbModuleIndex: number) {
   return /* js */ `
     Object.assign(
       ${[
@@ -47,12 +47,20 @@ export function runtimeVirtualModule(
 ) {
   const datasourceRegistryParts = datasources
     .filter((datasource) => datasource.enabled)
-    .map(({ name, imports: { schema, connector } }, datasourceIndex) => {
-      const datasourceModuleVariableName = genDatasourceModuleVariableName(datasourceIndex);
+    .flatMap(({ name, drivers }) => {
+      return drivers.map((driver) => {
+        return {
+          name,
+          driver,
+        };
+      });
+    })
+    .map(({ name, driver }, datasourceIndex) => {
+      const connectorVarName = genConnectorModuleVariableName(datasourceIndex);
 
       const imports = [
-        genImport(connector, datasourceModuleVariableName),
-        ...schema.map((schemaModuleId, schemaIndex) => {
+        genImport(driver.imports.connector, connectorVarName),
+        ...driver.imports.schema.map((schemaModuleId, schemaIndex) => {
           return genImport(schemaModuleId, {
             name: "*",
             as: genSchemaModuleVariableName(datasourceIndex, schemaIndex),
@@ -60,41 +68,45 @@ export function runtimeVirtualModule(
         }),
       ];
 
-      const mergedSchemaVariableName = genMergedSchemaVariableName(datasourceIndex);
-      const mergedSchemaObject = mergeSchemaModules(schema, datasourceIndex);
+      const mergedSchemaVariableName = genMergeSchemaVariableName(datasourceIndex);
+      const mergedSchemaObject = mergeSchemaModules(driver.imports.schema, datasourceIndex);
 
       const schemaDefinitions = [
         /* js */ `const ${mergedSchemaVariableName} = ${mergedSchemaObject};`,
       ];
 
-      const entries: [string, string][] = [
-        [
-          name,
-          genObjectFromRaw({
-            create: /* js */ `(config) => ${datasourceModuleVariableName}(config, ${mergedSchemaVariableName})`,
-            schema: mergedSchemaVariableName,
-          }),
-        ],
-      ];
+      const factoryObject = {
+        name,
+        driver: driver.name,
+        factory: {
+          create: /* js */ `(config) => ${connectorVarName}(config, ${mergedSchemaVariableName})`,
+          schema: mergedSchemaVariableName,
+          dialect: genString(driver.dialect),
+        },
+      };
 
       return {
         imports,
         schemaDefinitions,
-        entries,
+        factoryObject,
       };
     })
     .reduce(
-      (acc, { imports, schemaDefinitions, entries }) => {
+      (acc, { imports, schemaDefinitions, factoryObject }) => {
+        const accFactoryObject = acc.factoryObject;
+        accFactoryObject[factoryObject.name] ||= {};
+        accFactoryObject[factoryObject.name][factoryObject.driver] = factoryObject.factory;
+
         return {
           imports: [...acc.imports, ...imports],
           schemaDefinitions: [...acc.schemaDefinitions, ...schemaDefinitions],
-          entries: [...acc.entries, ...entries],
+          factoryObject: accFactoryObject,
         };
       },
       {
         imports: [] as string[],
         schemaDefinitions: [] as string[],
-        entries: [] as [string, string][],
+        factoryObject: {} as { [name: string]: { [driver: string]: object } },
       },
     );
 
@@ -122,10 +134,10 @@ export function runtimeVirtualModule(
         ${
           legacyNitro
             ? script /* js */ `
-            function useNitroHooks() {
-              return useNitroApp().hooks;
-            }
-          `
+                function useNitroHooks() {
+                  return useNitroApp().hooks;
+                }
+              `
             : ""
         }
 
@@ -133,8 +145,8 @@ export function runtimeVirtualModule(
           return useNitroHooks().hook("close", cb);
         }
 
-        export function callConfigHook(name, config) {
-          return useNitroHooks().callHook("drizzle:config", name, config);
+        export function callConfigHook(...args) {
+          return useNitroHooks().callHook("drizzle:config", ...args);
         }
       `,
     ],
@@ -147,7 +159,7 @@ export function runtimeVirtualModule(
     
     ${datasourceRegistryParts.schemaDefinitions.join("\n")}
     
-    const ${datasourceRegistryVarName} = ${genObjectFromRawEntries(datasourceRegistryParts.entries)};
+    const ${datasourceRegistryVarName} = ${genObjectFromRaw(datasourceRegistryParts.factoryObject)};
 
     export function useDatasourceRegistry() {
       return ${datasourceRegistryVarName};
@@ -168,10 +180,11 @@ export function dialectVirtualModules(
   return Object.fromEntries(
     datasources
       .filter((d) => d.enabled)
-      .map(({ name, dialect }) => {
+      .map(({ name }) => {
         return [
           `#nitro-drizzle/dialects/${name}`,
-          genExport(`nitro-drizzle/dialects/${dialect}`, "*"),
+          `export {};`,
+          // genExport(`nitro-drizzle/dialects/${dialect}`, "*"),
         ] as const;
       }),
   );
@@ -191,8 +204,15 @@ export function migrationsVirtualModule(
 
   parts.push(/*js*/ `
     export const migrationConfig = ${genObjectFromRawEntries(
-      enabledDatasources.map(({ name, migrations }) => {
-        return [name, JSON.stringify(migrations.config)];
+      enabledDatasources.map(({ name, drivers }) => {
+        return [
+          name,
+          genObjectFromRawEntries(
+            Object.entries(drivers).map(([name, options]) => {
+              return [name, JSON.stringify(options.migrations.config)];
+            }),
+          ),
+        ];
       }),
     )};
   `);

@@ -10,8 +10,17 @@ import {
   type ContextOptions,
   type MigrationOptions,
 } from "nitro-drizzle/context";
-import type { VirtualModules, MaybePromise, NitroHookName } from "nitro-drizzle/shared";
+import type {
+  VirtualModules,
+  MaybePromise,
+  NitroHookName,
+  Variant,
+  ConnectorSpecifier,
+  ConnectorVariants,
+  ExpandVariants,
+} from "nitro-drizzle/shared";
 import { pkgName } from "nitro-drizzle/meta";
+import type { Connector } from "nitro-drizzle/drivers";
 
 import { updateServerAssets } from "./utils/assets";
 import { addInlineExternals, addNoExternals } from "./utils/externals";
@@ -24,11 +33,13 @@ import { isLegacy } from "./utils/nitro";
 
 /**
  * Datasource-specific configuration options.
- * This interface is augmented by the module with connector-specific options.
  */
-export interface DatasourceOptions {
-  // augmented by module
-}
+type DatasourceOptionsMapper<T extends Variant<Connector<any, any, any, any>, ConnectorSpecifier>> =
+  T extends any ? Variant<{ drivers: readonly string[] }, Pick<T["selector"], "name">> : never;
+
+type DatasourceOptionsVariants = DatasourceOptionsMapper<ConnectorVariants>;
+
+export type DatasourceOptions = ExpandVariants<DatasourceOptionsVariants, ["name"]>;
 
 declare module "nitropack/types" {
   interface NitroOptions {
@@ -153,6 +164,7 @@ const module: LegacyNitroModule & NitroModule = {
       declarations(declarations): MaybePromise<void> {
         nitro.hooks.hook("types:extend", async (types) => {
           await addAugmentations(nitro, types, {
+            ...declarations.shared,
             ...declarations.runtime,
             ...declarations.module,
           });
