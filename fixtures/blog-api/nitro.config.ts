@@ -8,25 +8,41 @@ export default defineConfig({
   runtimeConfig: {
     drizzle: {
       content: {
-        url: ":memory:",
+        driver: "",
+        sqlite: {
+          url: ":memory:",
+        },
+        d1: {
+          binding: "content",
+        },
       },
       users: {
-        dataDir: "memory://",
+        driver: "sqlite",
+        postgresql: {
+          url: "",
+        },
+        pglite: {
+          dataDir: "memory://",
+        },
+        d1: {
+          binding: "users",
+        },
       },
       // @ts-expect-error
       unknown: {},
     },
   },
   drizzle: {
+    baseDir: "~/db/drizzle",
     migrations: {
       migrateOnInit: true,
     },
     datasources: {
       content: {
-        connector: "sqlite",
+        drivers: ["postgresql", "pglite", "sqlite", "d1"],
       },
       users: {
-        connector: "pglite",
+        drivers: ["postgresql", "pglite", "sqlite", "d1"],
       },
     },
     // @ts-expect-error
