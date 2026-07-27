@@ -2,15 +2,15 @@
   "name": "nitro-drizzle",
   "version": "0.3.0-beta.2",
   "description": "Nitro module to integrate Drizzle ORM with ease.",
-  "homepage": "https://github.com/Myshkouski/nitro-drizzle#readme",
+  "homepage": "https://github.com/myshkouski/nitro-drizzle#readme",
   "bugs": {
-    "url": "https://github.com/Myshkouski/nitro-drizzle/issues"
+    "url": "https://github.com/myshkouski/nitro-drizzle/issues"
   },
   "license": "MIT",
   "author": "Alexei Myshkouski <alexeimyshkouski@gmail.com>",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Myshkouski/nitro-drizzle.git"
+    "url": "git+https://github.com/myshkouski/nitro-drizzle.git"
   },
   "files": [
     "dist"
