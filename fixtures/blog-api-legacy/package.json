@@ -3,6 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "build": "nitropack build",
     "dev": "nitropack dev",
     "dev:prepare": "nitropack prepare",
     "migrate:users": "nitropack task run drizzle:migrate --payload '{ \"name\": \"users\" }'",
