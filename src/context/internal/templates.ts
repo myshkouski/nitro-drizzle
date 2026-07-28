@@ -48,6 +48,8 @@ export function sharedTypeDeclarations(
   const SCHEMA_PARTS_TYPE = "SchemaParts";
   const SCHEMA_TYPE = "SchemaVariants";
   const CONNECTOR_TYPE = "Connectors";
+  const UNWRAP_VARIANT_TYPE = "UnwrapVariant";
+  const MERGE_SCHEMA_TYPE = "MergeSchema";
 
   const schemaFiles = new ImportedModules();
   connectors
@@ -64,8 +66,8 @@ export function sharedTypeDeclarations(
   });
 
   const content = [
-    genTypeImport("nitro-drizzle/shared", ["Variant", "UnwrapVariant"]),
-    genTypeImport("nitro-drizzle/drivers", ["Schema", "MergeSchema"]),
+    genTypeImport("nitro-drizzle/shared", ["Variant", UNWRAP_VARIANT_TYPE]),
+    genTypeImport("nitro-drizzle/drivers", ["Schema", MERGE_SCHEMA_TYPE]),
 
     script /* ts */ `type ${SCHEMA_PARTS_TYPE} = [
       ${schemaFiles
@@ -89,7 +91,7 @@ export function sharedTypeDeclarations(
       ${genVariants({
         variants: connectors.map((connector): [schemaType: string, dimensions: Selector] => {
           return [
-            `MergeSchema<${SCHEMA_PARTS_TYPE}, ${
+            `${MERGE_SCHEMA_TYPE}<${SCHEMA_PARTS_TYPE}, ${
               connector.driver.imports.schema
                 .map((schemaFile) => {
                   return schemaFiles.getOrAdd(schemaFile).toString();
@@ -103,12 +105,12 @@ export function sharedTypeDeclarations(
     `,
 
     script /**ts */ `
-      declare module "${moduleId}" {
+      declare module ${genString(moduleId)} {
         type ConnectorVariants = ${genVariants({
           variants: connectors.map((connector): [connectorType: string, selector: Selector] => {
             const dimensions = getConnectorDimensions(connector);
             return [
-              `${CONNECTOR_TYPE}<UnwrapVariant<${SCHEMA_TYPE}, ${genObjectFromValues(dimensions)}>>[${driverImports.getOrAdd(connector.driver.imports.connector)}]`,
+              /* ts */ `${CONNECTOR_TYPE}<${UNWRAP_VARIANT_TYPE}<${SCHEMA_TYPE}, ${genObjectFromValues(dimensions)}>>[${driverImports.getOrAdd(connector.driver.imports.connector)}]`,
               dimensions,
             ];
           }),
