@@ -17,6 +17,7 @@
     "nitropack": "catalog:"
   },
   "devDependencies": {
-    "drizzle-kit": "catalog:"
+    "drizzle-kit": "catalog:",
+    "wrangler": "catalog:"
   }
 }
