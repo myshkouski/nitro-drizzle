@@ -1,7 +1,8 @@
-import { genTypeImport, genString, genObjectFromValues } from "knitwork";
+import { genTypeImport, genString, genObjectFromValues, genInlineTypeImport } from "knitwork";
 import type { DatasourceInfo, DriverOptions } from "..";
 import { genVariants, type Selector, type VirtualModules } from "nitro-drizzle/shared";
 import { script } from "./format";
+import { genReference, genTypeName } from "./codegen";
 
 type ConnectorInfo = {
   name: string;
@@ -82,7 +83,7 @@ export function sharedTypeDeclarations(
       ${driverImports
         .values()
         .map((file) => {
-          return `typeof import(${genString(file)}).default<TSchema>`;
+          return genInlineTypeImport(file) + `<TSchema>`;
         })
         .join(",\n")}
     ]`,
@@ -91,13 +92,16 @@ export function sharedTypeDeclarations(
       ${genVariants({
         variants: connectors.map((connector): [schemaType: string, dimensions: Selector] => {
           return [
-            `${MERGE_SCHEMA_TYPE}<${SCHEMA_PARTS_TYPE}, ${
-              connector.driver.imports.schema
-                .map((schemaFile) => {
-                  return schemaFiles.getOrAdd(schemaFile).toString();
-                })
-                .join(" | ") || "never"
-            }>`,
+            genTypeName(MERGE_SCHEMA_TYPE, {
+              generic: [
+                SCHEMA_PARTS_TYPE,
+                connector.driver.imports.schema
+                  .map((schemaFile) => {
+                    return schemaFiles.getOrAdd(schemaFile).toString();
+                  })
+                  .join(" | ") || "never",
+              ],
+            }),
             getConnectorDimensions(connector),
           ];
         }),
@@ -110,7 +114,13 @@ export function sharedTypeDeclarations(
           variants: connectors.map((connector): [connectorType: string, selector: Selector] => {
             const dimensions = getConnectorDimensions(connector);
             return [
-              /* ts */ `${CONNECTOR_TYPE}<${UNWRAP_VARIANT_TYPE}<${SCHEMA_TYPE}, ${genObjectFromValues(dimensions)}>>[${driverImports.getOrAdd(connector.driver.imports.connector)}]`,
+              genTypeName(CONNECTOR_TYPE, {
+                generic: [
+                  genTypeName(UNWRAP_VARIANT_TYPE, {
+                    generic: [SCHEMA_TYPE, genObjectFromValues(dimensions)],
+                  }),
+                ],
+              }) + `[${driverImports.getOrAdd(connector.driver.imports.connector)}]`,
               dimensions,
             ];
           }),
@@ -127,16 +137,6 @@ export function sharedTypeDeclarations(
 /** @deprecated */
 export function runtimeDeclarations(_datasources: readonly DatasourceInfo[]) {
   return "";
-}
-
-export type TypeReference = { types: string };
-
-export type PathReference = { path: string };
-
-export function genReference(reference: TypeReference | PathReference) {
-  return /* ts */ `/// <reference ${Object.entries(reference)
-    .map(([prop, value]) => `${prop}="${value}"`)
-    .join("")} />`;
 }
 
 export function moduleTypeDeclarations(

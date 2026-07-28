@@ -9,7 +9,6 @@ import { accent } from "./internal/logger";
 import { resolveFiles } from "./internal/fs";
 import {
   dialectDeclarations,
-  genReference,
   moduleTypeDeclarations,
   runtimeDeclarations,
   sharedTypeDeclarations,
@@ -25,6 +24,7 @@ import type { MaybePromise, NitroHookName, VirtualModules } from "nitro-drizzle/
 import type { ServerAssetDir as LegacyServerAssetDir } from "nitropack/types";
 import type { ServerAssetDir } from "nitro/types";
 import { join } from "pathe";
+import { genReference } from "./internal/codegen";
 
 /**
  * Context interface for managing Drizzle datasource configurations.
