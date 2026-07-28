@@ -25,6 +25,7 @@ export async function migrateDatabase<TSession = any>(
 ) {
   for await (const { filename, idx, ...migrationsMeta } of migrations) {
     try {
+      console.debug(config);
       await database.dialect.migrate([migrationsMeta], database.session, {
         migrationsSchema: config?.schema,
         migrationsTable: config?.table,
