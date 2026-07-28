@@ -131,7 +131,7 @@ declare module "nitro/types" {
 type ConfigHookArgsMapper<T extends Variant<any, Selector>> =
   T extends Variant<infer V, infer S> ? [name: S["name"], driver: S["driver"], config: V] : never;
 
-export type ConfigHookArgs = ConfigHookArgsMapper<RuntimeConfigVariants>;
+export type ConfigHookArgs = ConfigHookArgsMapper<ConfigVariants>;
 
 export interface ConfigHooks {
   "drizzle:config": (...args: ConfigHookArgs) => void | Promise<void>;
