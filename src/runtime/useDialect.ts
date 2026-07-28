@@ -3,15 +3,19 @@ import { useDatasource, type Datasources, type DatasourceVariants } from "nitro-
 import type { ConnectorSpecifier, ExpandVariants, Variant } from "nitro-drizzle/shared";
 import { useDatasourceProvider } from "./internal/createDatasource";
 
-export type DialectOf<TDatasource extends Datasource<any, any, any>> =
-  TDatasource extends Datasource<infer TDialect, any, any> ? TDialect : never;
+export async function useDialect<
+  TName extends keyof Datasources & string,
+  THandlers extends DialectHandlers<TName, DialectHandlerArgs[TName]>,
+>(
+  name: TName,
+  handlers: THandlers,
+): Promise<{ [K in keyof THandlers]: ReturnType<THandlers[K]> }[keyof THandlers]> {
+  const datasource = await useDatasource(name);
+  const { dialect } = useDatasourceProvider(name);
+  return await handlers[dialect](datasource);
+}
 
-export type DatasourceOfDialect<
-  TDialect extends string,
-  TDatasource extends Datasource<any, any, any>,
-> = TDatasource extends Datasource<TDialect, any, any> ? TDatasource : never;
-
-type ExactHandlers<
+type DialectHandlers<
   TName extends keyof Datasources & string,
   T,
 > = T extends DialectHandlerArgs[TName]
@@ -22,24 +26,12 @@ type ExactHandlers<
     }
   : never;
 
-export async function useDialect<
-  TName extends keyof Datasources & string,
-  THandlerArgs extends DialectHandlerArgs[TName],
-  THandlers extends ExactHandlers<TName, THandlerArgs>,
->(
-  name: TName,
-  handlers: THandlers,
-): Promise<{ [K in keyof THandlers]: ReturnType<THandlers[K]> }[keyof THandlers]> {
-  const datasource = await useDatasource(name);
-  const { dialect } = useDatasourceProvider(name);
-  return await handlers[dialect](datasource);
-}
-
 type DialectHandlersArgsMapper<
   T extends Variant<Datasource<string, any, Schema>, ConnectorSpecifier>,
-> = T extends any
-  ? Variant<[datasource: T["value"]], Pick<T["selector"], "name" | "dialect">>
-  : never;
+> =
+  T extends Variant<infer V, infer S>
+    ? Variant<[datasource: V], Pick<S, "name" | "dialect">>
+    : never;
 
 type DialectHandlerVariants = DialectHandlersArgsMapper<DatasourceVariants>;
 
