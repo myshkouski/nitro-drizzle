@@ -1,5 +1,10 @@
 import { defineNitroConfig } from "nitropack/config";
 
+type DrizzleDriverName = "postgresql" | "pglite" | "sqlite" | "d1";
+const defaultDrizzleDrivers: DrizzleDriverName[] = ["postgresql", "pglite", "sqlite", "d1"];
+const drizzleDrivers =
+  (process.env.DRIZZLE_DRIVERS?.split(",") as DrizzleDriverName[]) ?? defaultDrizzleDrivers;
+
 export default defineNitroConfig({
   debug: true,
   compatibilityDate: "latest",
@@ -11,7 +16,7 @@ export default defineNitroConfig({
   runtimeConfig: {
     drizzle: {
       content: {
-        driver: "sqlite",
+        driver: "",
         sqlite: {
           url: ":memory:",
         },
@@ -20,7 +25,7 @@ export default defineNitroConfig({
         },
       },
       users: {
-        driver: "sqlite",
+        driver: "",
         postgresql: {
           url: "",
         },
@@ -42,10 +47,10 @@ export default defineNitroConfig({
     },
     datasources: {
       content: {
-        drivers: ["postgresql", "pglite", "sqlite", "d1"],
+        drivers: drizzleDrivers,
       },
       users: {
-        drivers: ["postgresql", "pglite", "sqlite", "d1"],
+        drivers: drizzleDrivers,
       },
     },
     // @ts-expect-error
@@ -63,6 +68,10 @@ export default defineNitroConfig({
       //     },
       //   ],
       // },
+      vars: {
+        NITRO_DRIZZLE_CONTENT_DRIVER: "d1",
+        NITRO_DRIZZLE_USERS_DRIVER: "d1",
+      },
       d1_databases: [
         {
           database_name: "content",
