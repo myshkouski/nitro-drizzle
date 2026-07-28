@@ -109,9 +109,8 @@ export type DatasourceConfig = ExpandVariants<ConfigVariants, ["name", "driver"]
  */
 export type DriverRuntimeConfig = ExpandVariants<RuntimeConfigVariants, ["name", "driver"]>;
 
-type DriverNameMapper<T extends Variant<any, Selector>> = T extends any
-  ? Variant<{ driver: T["selector"]["driver"] }, Pick<T["selector"], "name">>
-  : never;
+type DriverNameMapper<T extends Variant<any, Selector>> =
+  T extends Variant<any, infer S> ? Variant<{ driver?: S["driver"] | "" }, Pick<S, "name">> : never;
 
 type DriverNameVariants = DriverNameMapper<RuntimeConfigVariants>;
 
