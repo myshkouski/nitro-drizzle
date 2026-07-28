@@ -52,7 +52,7 @@ export type DatasourceProviderVariants = DatasourceProviderMapper<ConnectorVaria
  */
 export type DatasourceRegistry = ExpandVariants<DatasourceProviderVariants, ["name", "driver"]>;
 
-type ConfigOf<T extends Connector<any, any, any, any>> =
+export type ConfigOf<T extends Connector<any, any, any, any>> =
   T extends Connector<any, any, any, infer TConfig> ? TConfig : never;
 
 export type DatasourceOf<T extends Connector<any, any, any, any>> = T extends (
