@@ -22,16 +22,6 @@ export interface DatasourceProvider<
   create(config: TConfig): MaybePromise<TDatasource>;
 }
 
-/**
- * Extracts the DatasourceProvider type from a DatasourceDriver factory function.
- * @template TSchema - The schema type
- * @template TFactory - The driver factory type
- */
-export type DatasourceFactory<T extends Connector<any, any, any, any>> =
-  T extends Connector<infer TDialect, any, infer TConfig, any, infer TDatasource>
-    ? DatasourceProvider<TDialect, TConfig, TDatasource>
-    : never;
-
 type ConfigMapper<T extends Variant<Connector<any, any, any, any>, ConnectorSpecifier>> =
   T extends any ? Variant<ConfigOf<T["value"]>, Pick<T["selector"], "name" | "driver">> : never;
 
@@ -43,21 +33,35 @@ type RuntimeConfigMapper<T extends Variant<any, Selector>> = T extends any
 
 type RuntimeConfigVariants = RuntimeConfigMapper<ConfigVariants>;
 
-type DatasourceFactoryMapper<T extends Variant<Connector<any, any, any, any>, ConnectorSpecifier>> =
-  T extends any ? Variant<DatasourceFactory<T["value"]>, T["selector"]> : never;
+type DatasourceProviderMapper<
+  T extends Variant<Connector<any, any, any, any>, ConnectorSpecifier>,
+> =
+  T extends Variant<infer V, infer S>
+    ? Variant<
+        V extends Connector<infer TDialect, any, infer TConfig, any>
+          ? DatasourceProvider<TDialect, TConfig, DatasourceOf<V>>
+          : never,
+        S
+      >
+    : never;
 
-export type DatasourceFactoryVariants = DatasourceFactoryMapper<ConnectorVariants>;
+export type DatasourceProviderVariants = DatasourceProviderMapper<ConnectorVariants>;
 
 /**
  * Registry interface for datasource providers.
  */
-export type DatasourceRegistry = ExpandVariants<DatasourceFactoryVariants, ["name", "driver"]>;
+export type DatasourceRegistry = ExpandVariants<DatasourceProviderVariants, ["name", "driver"]>;
 
-type ConfigOf<T extends Connector<any, any, any, any, any>> =
-  T extends Connector<any, any, any, infer TConfig, any> ? TConfig : never;
+type ConfigOf<T extends Connector<any, any, any, any>> =
+  T extends Connector<any, any, any, infer TConfig> ? TConfig : never;
 
-export type DatasourceOf<T extends Connector<any, any, any, any, any>> =
-  T extends Connector<any, any, any, any, infer TDatasource> ? TDatasource : never;
+export type DatasourceOf<T extends Connector<any, any, any, any>> = T extends (
+  ...args: any
+) => MaybePromise<infer R>
+  ? R extends Datasource<any, any, any>
+    ? R
+    : never
+  : never;
 
 type DatasourceMapper<T extends Variant<Connector<any, any, any, any>, ConnectorSpecifier>> =
   T extends any ? Variant<DatasourceOf<T["value"]>, T["selector"]> : never;

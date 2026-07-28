@@ -9,17 +9,10 @@ export type Schema = Record<string, any>;
  * Factory function type for creating Drizzle datasource instances.
  * @template TDatabase - The database type
  */
-export type Connector<
-  TDialect extends string,
-  TDatabase,
-  TSchema extends Schema,
-  TConfig,
-  TDatasource extends Datasource<TDialect, TDatabase, TSchema> = Datasource<
-    TDialect,
-    TDatabase,
-    TSchema
-  >,
-> = (config: TConfig, schema: TSchema) => MaybePromise<TDatasource>;
+export type Connector<TDialect extends string, TDatabase, TSchema extends Schema, TConfig> = (
+  config: TConfig,
+  schema: TSchema,
+) => MaybePromise<Datasource<TDialect, TDatabase, TSchema>>;
 
 export type MergeSchema<T extends readonly Schema[], Indices extends keyof T & number> = [
   Indices,

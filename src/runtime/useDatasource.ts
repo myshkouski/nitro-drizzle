@@ -1,11 +1,12 @@
-import type { Datasources } from ".";
+import type { Datasources, DatasourceVariants } from ".";
 import { createDatasource } from "./internal/createDatasource";
 import { clearCachedConfig } from "./internal/config";
 
 import { onServerClose } from "#nitro-drizzle/runtime";
+import type { ConnectorSpecifier, UnwrapVariant } from "nitro-drizzle/shared";
 
 const datasources: {
-  [K in keyof Datasources & string]?: Promise<Datasources[K][string]>;
+  [TName in keyof Datasources & string]?: Promise<Datasources[TName][string]>;
 } = {};
 
 /** Options for datasource creation and lifecycle management. */
@@ -22,16 +23,21 @@ export type UseDatasourceOptions = Partial<{
  * @param options - Lifecycle options
  * @returns The datasource instance
  */
-export async function useDatasource<TName extends keyof Datasources & string>(
+export async function useDatasource<TName extends ConnectorSpecifier["name"]>(
   name: TName,
   options: UseDatasourceOptions = {},
-) {
-  let datasourcePromise: Promise<Datasources[TName][string]>;
+): Promise<UnwrapVariant<DatasourceVariants, ConnectorSpecifier & { name: TName }>> {
+  let datasourcePromise: Promise<
+    UnwrapVariant<DatasourceVariants, ConnectorSpecifier & { name: TName }>
+  >;
 
   if (name in datasources) {
+    // @ts-expect-error
     datasourcePromise = datasources[name]!;
   } else {
-    datasourcePromise = datasources[name] = createDatasource(name);
+    datasources[name] = createDatasource(name);
+    // @ts-expect-error
+    datasourcePromise = datasources[name];
     const { autoClose = true } = options;
     if (autoClose) {
       let removeCloseHandler: () => void;
