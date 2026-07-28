@@ -208,8 +208,8 @@ export function migrationsVirtualModule(
         return [
           name,
           genObjectFromRawEntries(
-            Object.entries(drivers).map(([name, options]) => {
-              return [name, JSON.stringify(options.migrations.config)];
+            drivers.map((driver) => {
+              return [driver.name, JSON.stringify(driver.migrations.config)];
             }),
           ),
         ];
