@@ -23,15 +23,17 @@ export function onConflictDoUpdate<TInsert extends SQLiteInsertBase<any, any, an
 /**
  * Adds an ON CONFLICT DO NOTHING clause to a SQLite insert statement.
  * @template TInsert - The insert type
- * @param _ - Partial object of columns (unused but required for API consistency)
+ * @param target - Partial object of columns
  * @param insert - The insert statement
  * @returns The modified insert statement with DO NOTHING
  */
 export function onConflictDoNothing<TInsert extends SQLiteInsertBase<any, any, any, any, any, any>>(
-  _: Partial<InferColumns<InferTable<TInsert>>>,
+  target: Partial<InferColumns<InferTable<TInsert>>>,
   insert: TInsert,
 ): TInsert {
-  return insert.onConflictDoNothing();
+  return insert.onConflictDoNothing({
+    target: Object.values(target),
+  });
 }
 
 /**
