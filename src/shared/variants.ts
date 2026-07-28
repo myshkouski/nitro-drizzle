@@ -8,7 +8,7 @@ export type Variant<TValue, TSelector extends Selector> = {
 };
 
 export type UnwrapVariant<T extends Variant<any, any>, D extends T["selector"]> =
-  T extends Variant<any, D> ? T["value"] : never;
+  T extends Variant<infer V, D> ? V : never;
 
 type Dimensions<TVariant extends Variant<any, any>> = readonly (keyof TVariant["selector"] &
   string)[];
