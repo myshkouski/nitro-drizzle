@@ -19,14 +19,14 @@ export default defineNitroPlugin((nitro) => {
 
 async function seedUsers() {
   await useDialect("users", {
-    async postgresql({ database, schema }): Promise<void> {
+    async postgresql({ database, schema }) {
       await pgOnConflictDoNothing(
         usePrimaryColumns(schema.authors),
         database.insert(schema.authors).values(sampleData.authors),
       );
     },
 
-    async sqlite({ database, schema }): Promise<void> {
+    async sqlite({ database, schema }) {
       await sqliteOnConflictDoNothing(
         usePrimaryColumns(schema.authors),
         database.insert(schema.authors).values(sampleData.authors),
