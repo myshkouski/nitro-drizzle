@@ -24,9 +24,9 @@ export async function buildLegacyNitro(dir: string, config?: Omit<NitroConfig, "
   await prerender(nitro);
   await build(nitro);
 
-  const outDir = resolve(rootDir, ".output");
+  const serverDir = nitro.options.output.serverDir;
 
-  const entryPath = resolve(outDir, "server/index.mjs");
+  const entryPath = resolve(serverDir, "index.mjs");
   const { listener } = await import(entryPath);
 
   return listener as RequestListener;
