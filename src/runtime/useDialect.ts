@@ -12,6 +12,9 @@ export async function useDialect<
 ): Promise<{ [K in keyof THandlers]: ReturnType<THandlers[K]> }[keyof THandlers]> {
   const datasource = await useDatasource(name);
   const { dialect } = useDatasourceProvider(name);
+  if (false === dialect in handlers) {
+    throw new Error(`No dialect-specific handler provided for dialect "${dialect}".`);
+  }
   return await handlers[dialect](datasource);
 }
 
