@@ -6,7 +6,12 @@ const datasourceConfig: Partial<{
 }> = {};
 
 /**
+ * Gets the driver configuration for a datasource, calling the config hook.
  * @internal
+ * @template TName - The datasource name
+ * @param name - The datasource name
+ * @returns The driver configuration
+ * @throws If called inside the `drizzle:config` hook to prevent circular access
  */
 export async function getDriverConfig<TName extends keyof Datasources & string>(name: TName) {
   if (name in datasourceConfig && !datasourceConfig[name]) {
@@ -26,6 +31,12 @@ export async function getDriverConfig<TName extends keyof Datasources & string>(
   return datasourceConfig[name];
 }
 
+/**
+ * Clears the cached driver configuration for a datasource.
+ * @internal
+ * @template TName - The datasource name
+ * @param name - The datasource name
+ */
 export function clearCachedConfig<TName extends keyof Datasources & string>(name: TName) {
   delete datasourceConfig[name];
 }

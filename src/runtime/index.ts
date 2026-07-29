@@ -52,9 +52,17 @@ export type DatasourceProviderVariants = DatasourceProviderMapper<ConnectorVaria
  */
 export type DatasourceRegistry = ExpandVariants<DatasourceProviderVariants, ["name", "driver"]>;
 
+/**
+ * Extracts the configuration type from a Connector.
+ * @template T - The Connector type
+ */
 export type ConfigOf<T extends Connector<any, any, any, any>> =
   T extends Connector<any, any, any, infer TConfig> ? TConfig : never;
 
+/**
+ * Extracts the datasource type from a Connector factory.
+ * @template T - The Connector type
+ */
 export type DatasourceOf<T extends Connector<any, any, any, any>> = T extends (
   ...args: any
 ) => MaybePromise<infer R>
@@ -114,6 +122,9 @@ type DriverNameMapper<T extends Variant<any, Selector>> =
 
 type DriverNameVariants = DriverNameMapper<RuntimeConfigVariants>;
 
+/**
+ * Runtime config type including driver name variants for each datasource.
+ */
 export type RuntimeConfig = DriverRuntimeConfig & ExpandVariants<DriverNameVariants, ["name"]>;
 
 declare module "nitropack/types" {
@@ -131,8 +142,14 @@ declare module "nitro/types" {
 type ConfigHookArgsMapper<T extends Variant<any, Selector>> =
   T extends Variant<infer V, infer S> ? [name: S["name"], driver: S["driver"], config: V] : never;
 
+/**
+ * Arguments passed to the `drizzle:config` hook.
+ */
 export type ConfigHookArgs = ConfigHookArgsMapper<ConfigVariants>;
 
+/**
+ * Hooks for Drizzle datasource configuration.
+ */
 export interface ConfigHooks {
   "drizzle:config": (...args: ConfigHookArgs) => void | Promise<void>;
 }

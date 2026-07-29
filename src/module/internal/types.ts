@@ -11,12 +11,22 @@ import { writeFile } from "./fs";
 import type { VirtualModules } from "nitro-drizzle/shared";
 import { isLegacy } from "../utils/nitro";
 
+/**
+ * Adds paths to the tsconfig include array.
+ * @param nitroTypes - The Nitro types configuration
+ * @param paths - The paths to add
+ */
 export function addTsConfigInclude(nitroTypes: LegacyNitroTypes, paths: readonly string[]) {
   nitroTypes.tsConfig ||= {};
   nitroTypes.tsConfig.include ||= [];
   nitroTypes.tsConfig.include.push(...paths);
 }
 
+/**
+ * Writes type declaration files and adds them to the tsconfig include.
+ * @param nitroOptions - The Nitro options
+ * @param augmentations - The virtual modules containing type declarations
+ */
 export async function addAugmentations(
   nitroOptions: Nitro | LegacyNitro,
   nitroTypes: LegacyNitroTypes,
@@ -26,6 +36,12 @@ export async function addAugmentations(
   addTsConfigInclude(nitroTypes, paths);
 }
 
+/**
+ * Adds type declaration path mappings to the tsconfig compiler options.
+ * @param nitro - The Nitro instance
+ * @param nitroTypes - The Nitro types configuration
+ * @param declarations - The virtual modules to write as type declarations
+ */
 export async function addDeclarations(
   nitro: Nitro | LegacyNitro,
   nitroTypes: NitroTypes | LegacyNitroTypes,

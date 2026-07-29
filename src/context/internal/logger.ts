@@ -4,6 +4,12 @@ function accentColor(text: string | number | boolean) {
   return colorize("bold", colorize("greenBright", text.toString()));
 }
 
+/**
+ * Creates an accented string with bold green bright styling.
+ * @param strings - The template strings
+ * @param values - The values to interpolate
+ * @returns The styled string
+ */
 export function accent(strings: TemplateStringsArray, ...values: (string | number | boolean)[]) {
   let result = "";
   for (let i = 0; i < strings.length; i++) {

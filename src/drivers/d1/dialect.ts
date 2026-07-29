@@ -6,7 +6,8 @@ import { SQLiteAsyncDialect, type SQLiteSession } from "drizzle-orm/sqlite-core"
 import { SQLiteRaw } from "drizzle-orm/sqlite-core/query-builders/raw";
 
 /**
- * Dialect for Cloudflare D1 with batching instead of transaction for migrations.
+ * SQLite dialect for Cloudflare D1 that uses batching instead of transactions for migrations.
+ * D1 does not support transactions, so migrations are executed as a batch.
  * @see [Cloudflare D1 transaction not supported #2463](https://github.com/drizzle-team/drizzle-orm/issues/2463)
  */
 export class SQLiteD1Dialect extends SQLiteAsyncDialect {

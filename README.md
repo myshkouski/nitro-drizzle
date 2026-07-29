@@ -47,13 +47,13 @@ export default defineNitroConfig({
   modules: ["nitro-drizzle"],
   drizzle: {
     datasources: {
-      content: { connector: "sqlite" },
+      content: { drivers: ["sqlite", "d1"] },
     },
   },
 });
 ```
 
-See [ModuleOptions](src/module/index.ts) for all available options.
+See `ModuleOptions` in `src/module/index.ts` for all available options.
 
 ### 2. Define Drizzle Config and Schema
 
@@ -125,7 +125,7 @@ export default defineEventHandler(async () => {
 });
 ```
 
-### 4. Run Migrations
+### 5. Run Migrations
 
 If you enabled Nitro tasks in `nitro.config.ts`, you can run migrations via the Nitro CLI:
 
@@ -171,6 +171,27 @@ import { useDatasource } from "nitro-drizzle/runtime";
 
 const myDatasource = await useDatasource("myDatasourceName");
 const result = await myDatasource.database.select().from(myDatasource.schema.myTable).all();
+```
+
+### `useDialect<TName, THandlers>(name: TName, handlers: THandlers)`
+
+- **Purpose**: Provides type-safe dialect-specific handlers for a datasource. Automatically resolves the correct handler based on the configured driver.
+- **Parameters**:
+  - `name`: The unique name of the datasource as defined in `nitro.config.ts`.
+  - `handlers`: An object mapping dialect names to handler functions. Each handler receives the datasource instance.
+- **Returns**: A `Promise` that resolves to the return value of the handler for the current dialect.
+
+```ts
+import { useDialect } from "nitro-drizzle/runtime";
+
+const result = await useDialect("content", {
+  sqlite: (datasource) => {
+    return datasource.database.select().from(schema.posts).all();
+  },
+  postgresql: (datasource) => {
+    return datasource.database.select().from(schema.posts).all();
+  },
+});
 ```
 
 ### `defineConfig(config: DrizzleConfig, filename: string)`

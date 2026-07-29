@@ -5,10 +5,10 @@ import { fileURLToPath } from "node:url";
 
 /**
  * Define Drizzle config compatible with both 'nitro-drizzle' and 'drizzle-kit' packages.
- *
- * @param config
- * @param dirname
- * @returns
+ * Handles path resolution automatically for schema and output paths.
+ * @param config - The DrizzleKit configuration object
+ * @param filename - Pass `import.meta.url` as the filename for correct relative path resolution
+ * @returns A DrizzleKit compatible configuration object with resolved paths
  */
 export function defineConfig(config: DrizzleConfig, filename: string) {
   const { schema, out, ...other } = config;

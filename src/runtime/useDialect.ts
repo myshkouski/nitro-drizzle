@@ -3,6 +3,15 @@ import { useDatasource, type Datasources, type DatasourceVariants } from "nitro-
 import type { ConnectorSpecifier, ExpandVariants, Variant } from "nitro-drizzle/shared";
 import { useDatasourceProvider } from "./internal/createDatasource";
 
+/**
+ * Provides type-safe dialect-specific handlers for a datasource.
+ * Automatically resolves the correct handler based on the configured driver.
+ * @template TName - The datasource name
+ * @template THandlers - The dialect handlers mapping
+ * @param name - The datasource name
+ * @param handlers - An object mapping dialect names to handler functions
+ * @returns The result of the handler for the current dialect
+ */
 export async function useDialect<
   TName extends keyof Datasources & string,
   THandlers extends DialectHandlers<TName, DialectHandlerArgs[TName]>,
@@ -18,6 +27,11 @@ export async function useDialect<
   return await handlers[dialect](datasource);
 }
 
+/**
+ * Maps dialect names to their handler argument types for a datasource.
+ * @template TName - The datasource name
+ * @template T - The datasource type
+ */
 type DialectHandlers<
   TName extends keyof Datasources & string,
   T,

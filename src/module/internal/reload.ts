@@ -4,8 +4,15 @@ import type { Plugin } from "rollup";
 import { pkgName } from "nitro-drizzle/meta";
 import type { ContextOptions } from "nitro-drizzle/context";
 
+/** Options for the reload plugin. */
 export type ReloadPluginOptions = Pick<ContextOptions, "baseDir">;
 
+/**
+ * Creates a Rollup plugin that watches the base directory and triggers a Nitro restart on changes.
+ * @param nitro - The Nitro instance
+ * @param options - Reload plugin options
+ * @returns A Rollup plugin
+ */
 export function reloadPlugin(nitro: Nitro | NitroV1, options: ReloadPluginOptions): Plugin {
   return {
     name: `${pkgName}:rollup:watch`,

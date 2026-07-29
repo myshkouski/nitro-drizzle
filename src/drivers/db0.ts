@@ -25,5 +25,6 @@ export default defineConnector(<TSchema extends Schema>(options: Options, schema
 });
 
 export type Options = {
+  /** The name of the database to use from Nitro's built-in database configuration. */
   name?: string;
 };

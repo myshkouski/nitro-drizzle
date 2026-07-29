@@ -39,6 +39,9 @@ type DatasourceOptionsMapper<T extends Variant<Connector<any, any, any, any>, Co
 
 type DatasourceOptionsVariants = DatasourceOptionsMapper<ConnectorVariants>;
 
+/**
+ * Datasource-specific configuration options mapped by datasource name.
+ */
 export type DatasourceOptions = ExpandVariants<DatasourceOptionsVariants, ["name"]>;
 
 declare module "nitropack/types" {
@@ -71,10 +74,17 @@ export interface ModuleOptions {
   migrations?: false | Partial<MigrationOptions>;
 }
 
+/**
+ * Resolved module configuration with required fields.
+ */
 export type ModuleConfig = Required<ModuleOptions> & {
   migrations: false | Required<MigrationOptions>;
 };
 
+/**
+ * Creates the default module configuration options.
+ * @returns The default module configuration
+ */
 export function createDefaultOptions() {
   return {
     baseDir: "./drizzle",
@@ -87,6 +97,11 @@ export function createDefaultOptions() {
   } as const satisfies ModuleConfig;
 }
 
+/**
+ * Merges user-provided module options with defaults.
+ * @param options - Optional module configuration overrides
+ * @returns The resolved module configuration
+ */
 export function defineModuleConfig(options?: ModuleOptions): ModuleConfig {
   return defu(options, createDefaultOptions());
 }

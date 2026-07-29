@@ -3,6 +3,12 @@ import type { Resolver } from "..";
 import { resolve } from "pathe";
 import { genObjectKey } from "knitwork";
 
+/**
+ * Transforms a Drizzle config into a normalized datasource configuration.
+ * @param drizzleConfig - The raw DrizzleKit configuration
+ * @param options - Transformation options including directory name, path, resolver, and cwd
+ * @returns The transformed datasource configuration
+ */
 export async function transformDrizzleConfig(
   drizzleConfig: DrizzleConfig,
   { dirName, path, resolver, cwd }: TransformDrizzleConfigOptions,
@@ -33,6 +39,7 @@ export async function transformDrizzleConfig(
 
 export const DISABLED_DATASOURCE_DIRNAME_REGEX = /^[_-]+/;
 
+/** Options for transforming a Drizzle config into a datasource configuration. */
 export type TransformDrizzleConfigOptions = {
   dirName: string;
   path: string;

@@ -1,5 +1,11 @@
 import { dedent } from "strip-indent";
 
+/**
+ * Tagged template literal function that dedents and interpolates values.
+ * @param strings - The template strings array
+ * @param values - The interpolated values
+ * @returns The dedented and interpolated string
+ */
 export function script(strings: TemplateStringsArray, ...values: unknown[]): string {
   const rawStrings = strings.raw;
   let result = "";

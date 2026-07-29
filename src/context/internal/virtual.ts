@@ -36,11 +36,20 @@ function mergeSchemaModules(schemaIds: readonly string[], dbModuleIndex: number)
 }
 
 export type RuntimeVirtualModuleOptions = {
+  /** Whether to use the legacy Nitro API (nitropack/runtime) instead of the modern one (nitro/runtime-config). */
   legacyNitro: boolean;
+  /** The property name in the runtime config where drizzle configuration is stored. */
   runtimeConfigProp: string;
+  /** Hooks that are allowed to trigger the "drizzle:init" hook. */
   initHooks?: readonly string[];
 };
 
+/**
+ * Generates the runtime virtual module code for datasource management.
+ * @param datasources - The resolved datasource information
+ * @param options - Runtime virtual module options
+ * @returns The virtual module code string
+ */
 export function runtimeVirtualModule(
   datasources: readonly DatasourceInfo[],
   { legacyNitro, runtimeConfigProp, initHooks }: RuntimeVirtualModuleOptions,

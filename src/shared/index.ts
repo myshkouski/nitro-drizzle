@@ -18,6 +18,9 @@ export type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) ex
   ? I
   : never;
 
+/**
+ * Metadata associated with a datasource.
+ */
 export interface DatasourceMetadata {}
 
 export * from "./variants";

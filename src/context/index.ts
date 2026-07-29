@@ -445,9 +445,11 @@ export interface DatasourceInfo {
   name: string;
   /** Whether the datasource is enabled (filtered by connector configuration). */
   enabled: boolean;
+  /** Driver configurations for this datasource. */
   drivers: readonly DriverOptions[];
 }
 
+/** Options for a specific driver within a datasource. */
 export type DriverOptions = {
   name: string;
   dialect: string;

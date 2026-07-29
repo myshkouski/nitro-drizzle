@@ -42,7 +42,7 @@ const driver = defineConnector(
 export default driver;
 
 /** Configuration options for the Cloudflare D1 HTTP driver. */
-type D1HttpOptions = {
+export type D1HttpOptions = {
   /** Cloudflare account ID. */
   accountId: string;
   /** D1 database ID. */
@@ -52,7 +52,7 @@ type D1HttpOptions = {
 };
 
 /** Internal type for the HTTP driver callback functions. */
-type D1HttpDriver = {
+export type D1HttpDriver = {
   callback: AsyncRemoteCallback;
   batchCallback: AsyncBatchRemoteCallback;
 };

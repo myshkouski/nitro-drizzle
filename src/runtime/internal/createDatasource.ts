@@ -3,7 +3,10 @@ import { useConfig, type DatasourceRegistry } from "..";
 import { getDriverConfig } from "./config";
 
 /**
+ * Creates a datasource instance by name.
  * @internal
+ * @param name - The datasource name
+ * @returns The datasource instance
  */
 export async function createDatasource(name: keyof DatasourceRegistry & string) {
   const datasourceProvider = useDatasourceProvider(name);
@@ -12,7 +15,12 @@ export async function createDatasource(name: keyof DatasourceRegistry & string) 
 }
 
 /**
+ * Retrieves the datasource provider for a given datasource name.
  * @internal
+ * @template TName - The datasource name
+ * @param name - The datasource name
+ * @returns The datasource provider for the configured driver
+ * @throws If the driver is not supported by the datasource
  */
 export function useDatasourceProvider<TName extends keyof DatasourceRegistry & string>(
   name: TName,

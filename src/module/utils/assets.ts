@@ -5,6 +5,11 @@ import type {
 import type { NitroConfig, ServerAssetDir } from "nitro/types";
 import { consola } from "consola";
 
+/**
+ * Updates the server assets configuration, ensuring no duplicates.
+ * @param config - The Nitro configuration to update
+ * @param assets - The assets to add
+ */
 export function updateServerAssets(
   config: NitroConfig | LegacyNitroConfig,
   assets: readonly (ServerAssetDir | LegacyServerAssetDir)[],

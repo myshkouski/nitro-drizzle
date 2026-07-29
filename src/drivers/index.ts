@@ -14,6 +14,11 @@ export type Connector<TDialect extends string, TDatabase, TSchema extends Schema
   schema: TSchema,
 ) => MaybePromise<Datasource<TDialect, TDatabase, TSchema>>;
 
+/**
+ * Combines multiple schema types into an intersection type.
+ * @template T - The array of schema types
+ * @template Indices - The indices to include
+ */
 export type MergeSchema<T extends readonly Schema[], Indices extends keyof T & number> = [
   Indices,
 ] extends [never]
