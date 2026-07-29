@@ -2,21 +2,56 @@ import type { RequestListener } from "http";
 import { listen, type Listener } from "listhen";
 import { afterAll, beforeAll, expect, it } from "vitest";
 
-export function setupNitroTest(requestListener: () => Promise<RequestListener>) {
+export type SetupNitroTestOptions = {
+  meta?: Record<string, string>;
+  listener(): Promise<RequestListener>;
+};
+
+export function setupNitroTest(options: SetupNitroTestOptions) {
   let listener: Listener;
 
   beforeAll(async () => {
-    listener = await listen(await requestListener());
+    listener = await listen(await options.listener());
   });
 
   afterAll(async () => {
     await listener.close();
   });
 
-  it("should fetch users", { timeout: 30_000 }, async () => {
+  it("should be healthy", { timeout: 30_000 }, async () => {
+    const url = new URL("/api/v1/health", listener.url);
+    await expect
+      .poll(async () => {
+        const res = await fetch(url);
+        return res.status;
+      })
+      .toBe(200);
+  });
+
+  it("should use configured drivers", async () => {
+    const url = new URL("/api/v1/meta", listener.url);
+    const res = await fetch(url);
+    expect(res.status).toBe(200);
+
+    const data = await res.json();
+
+    expect(data).toMatchObject({
+      content: {
+        ready: true,
+        ...options.meta,
+      },
+      users: {
+        ready: true,
+        ...options.meta,
+      },
+    });
+  });
+
+  it("should return users", async () => {
     const url = new URL("/api/v1/users", listener.url);
     const res = await fetch(url);
     expect(res.status).toBe(200);
+
     const data = await res.json();
     // @ts-ignore
     expect(data.authors).toHaveLength(2);
@@ -26,7 +61,7 @@ export function setupNitroTest(requestListener: () => Promise<RequestListener>) 
     expect(data.authors[1]).toMatchObject({ id: 2, name: "Jane Smith", email: "jane@example.com" });
   });
 
-  it("should fetch content", { timeout: 30_000 }, async () => {
+  it("should return content", async () => {
     const url = new URL("/api/v1/content", listener.url);
     const res = await fetch(url);
     expect(res.status).toBe(200);
