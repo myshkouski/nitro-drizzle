@@ -1,14 +1,11 @@
 import { useDatasource } from "nitro-drizzle/runtime";
 import type { Datasource } from "nitro-drizzle/drivers";
 
-export default defineEventHandler(async (event) => {
-  const init = event.context.drizzle.readyState;
-
+export default defineEventHandler(async () => {
   const contentDatasource = await useDatasource("users");
   const usersDatasource = await useDatasource("users");
 
   return {
-    init,
     content: await getDatasourceMeta(contentDatasource),
     users: await getDatasourceMeta(usersDatasource),
   };

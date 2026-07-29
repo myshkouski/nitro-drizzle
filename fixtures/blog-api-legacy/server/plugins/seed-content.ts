@@ -5,6 +5,7 @@ import { useDialect } from "nitro-drizzle/runtime";
 import { usePrimaryColumns } from "nitro-drizzle/utils";
 import { onConflictDoNothing as sqliteOnConflictDoNothing } from "nitro-drizzle/dialects/sqlite";
 import { onConflictDoNothing as pgOnConflictDoNothing } from "nitro-drizzle/dialects/postgresql";
+import { onConflictDoNothing as mysqlOnConflictDoNothing } from "nitro-drizzle/dialects/mysql";
 
 import * as sampleData from "nitro-drizzle-sample-data/content";
 
@@ -26,6 +27,17 @@ async function seedContent() {
       );
 
       await pgOnConflictDoNothing(
+        usePrimaryColumns(schema.comments),
+        database.insert(schema.comments).values(sampleData.comments),
+      );
+    },
+    async mysql({ database, schema }) {
+      await mysqlOnConflictDoNothing(
+        usePrimaryColumns(schema.posts),
+        database.insert(schema.posts).values(sampleData.posts),
+      );
+
+      await mysqlOnConflictDoNothing(
         usePrimaryColumns(schema.comments),
         database.insert(schema.comments).values(sampleData.comments),
       );

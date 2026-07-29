@@ -6,6 +6,7 @@ export default defineConfig(
     dialect: "mysql",
     schema: ["./mysql/schema/posts.ts", "./mysql/schema/comments.ts"],
     out: "./mysql/migrations",
+    casing: "snake_case",
   },
   import.meta.url,
 );

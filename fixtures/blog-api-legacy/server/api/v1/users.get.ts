@@ -9,6 +9,11 @@ export default defineEventHandler(async (event) => {
         authors: await database.select().from(schema.authors).limit(10),
       };
     },
+    async mysql({ database, schema }) {
+      return {
+        authors: await database.select().from(schema.authors).limit(10),
+      };
+    },
     async postgresql({ database, schema }) {
       return {
         authors: await database.select().from(schema.authors).limit(10),
@@ -16,5 +21,7 @@ export default defineEventHandler(async (event) => {
     },
   });
 
-  return { authors };
+  return {
+    authors,
+  };
 });

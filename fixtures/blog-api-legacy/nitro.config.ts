@@ -1,7 +1,13 @@
 import { defineNitroConfig } from "nitropack/config";
 
-type DrizzleDriverName = "postgresql" | "pglite" | "sqlite" | "d1";
-const defaultDrizzleDrivers: DrizzleDriverName[] = ["postgresql", "pglite", "sqlite", "d1"];
+type DrizzleDriverName = "postgresql" | "mysql" | "pglite" | "sqlite" | "d1";
+const defaultDrizzleDrivers: DrizzleDriverName[] = [
+  "postgresql",
+  "mysql",
+  "pglite",
+  "sqlite",
+  "d1",
+];
 const drizzleDrivers =
   (process.env.DRIZZLE_DRIVERS?.split(",") as DrizzleDriverName[]) ?? defaultDrizzleDrivers;
 

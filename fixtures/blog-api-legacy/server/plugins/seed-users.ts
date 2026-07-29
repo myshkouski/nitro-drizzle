@@ -4,6 +4,7 @@ import { colorize } from "consola/utils";
 import { useDialect } from "nitro-drizzle/runtime";
 import { onConflictDoNothing as sqliteOnConflictDoNothing } from "nitro-drizzle/dialects/sqlite";
 import { onConflictDoNothing as pgOnConflictDoNothing } from "nitro-drizzle/dialects/postgresql";
+import { onConflictDoNothing as mysqlOnConflictDoNothing } from "nitro-drizzle/dialects/mysql";
 import { usePrimaryColumns } from "nitro-drizzle/utils";
 
 import * as sampleData from "nitro-drizzle-sample-data/users";
@@ -21,6 +22,13 @@ async function seedUsers() {
   await useDialect("users", {
     async postgresql({ database, schema }) {
       await pgOnConflictDoNothing(
+        usePrimaryColumns(schema.authors),
+        database.insert(schema.authors).values(sampleData.authors),
+      );
+    },
+
+    async mysql({ database, schema }) {
+      await mysqlOnConflictDoNothing(
         usePrimaryColumns(schema.authors),
         database.insert(schema.authors).values(sampleData.authors),
       );

@@ -6,6 +6,7 @@ export default defineConfig(
     dialect: "sqlite",
     schema: ["./sqlite/schema/posts.ts", "./sqlite/schema/comments.ts"],
     out: "./sqlite/migrations",
+    casing: "snake_case",
   },
   import.meta.url,
 );

@@ -4,9 +4,9 @@ export default defineConfig(
   {
     strict: true,
     dialect: "postgresql",
-    driver: "pglite",
-    schema: ["./postgresql/schema/posts.ts", "./postgresql/schema/comments.ts"],
+    schema: "./postgresql/schema.ts",
     out: "./postgresql/migrations",
+    casing: "snake_case",
   },
   import.meta.url,
 );

@@ -1,0 +1,13 @@
+{
+  "version": "7",
+  "dialect": "mysql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1785274621184,
+      "tag": "0000_neat_human_fly",
+      "breakpoints": true
+    }
+  ]
+}

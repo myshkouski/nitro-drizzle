@@ -15,6 +15,17 @@ export default defineEventHandler(async (event) => {
 
       return { posts, comments };
     },
+    async mysql({ database, schema }) {
+      const { posts, comments } = await database.transaction(async (tx) => {
+        const [posts, comments] = await Promise.all([
+          tx.select().from(schema.posts).limit(10),
+          tx.select().from(schema.comments).limit(10),
+        ]);
+        return { posts, comments };
+      });
+
+      return { posts, comments };
+    },
     async sqlite({ database, schema }) {
       const [posts, comments] = await Promise.all([
         database.query.posts
