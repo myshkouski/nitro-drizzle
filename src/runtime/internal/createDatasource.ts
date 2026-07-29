@@ -19,5 +19,8 @@ export function useDatasourceProvider<TName extends keyof DatasourceRegistry & s
 ) {
   const datasourceRegistry = useDatasourceRegistry();
   const { driver } = useConfig(name);
+  if (false === driver in datasourceRegistry[name]) {
+    throw new Error(`Driver "${driver}" is not supported by "${name}" datasource.`);
+  }
   return datasourceRegistry[name][driver];
 }
