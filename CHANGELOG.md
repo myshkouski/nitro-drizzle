@@ -1,3 +1,65 @@
+## v0.3.0-beta.4
+
+[compare changes](https://github.com/myshkouski/nitro-drizzle/compare/v0.3.0-beta.3...v0.3.0-beta.4)
+
+### 🚀 Enhancements
+
+- **sqlite:** Pass target columns to onConflictDoNothing ([e481da6](https://github.com/myshkouski/nitro-drizzle/commit/e481da6))
+- **fixtures:** Add dynamic driver selection and D1 database configuration ([f5b191e](https://github.com/myshkouski/nitro-drizzle/commit/f5b191e))
+- **deps:** Add wrangler to workspace catalog and blog-api-legacy ([082c09a](https://github.com/myshkouski/nitro-drizzle/commit/082c09a))
+- **scripts:** Add test:dev script for vitest ([7a75c19](https://github.com/myshkouski/nitro-drizzle/commit/7a75c19))
+- **runtime:** Export ConfigOf type for external use ([8383312](https://github.com/myshkouski/nitro-drizzle/commit/8383312))
+- **api:** Add datasource metadata endpoint and update health check ([db208c5](https://github.com/myshkouski/nitro-drizzle/commit/db208c5))
+- **fixtures:** Add MySQL driver support to blog-api-legacy fixture ([93612cc](https://github.com/myshkouski/nitro-drizzle/commit/93612cc))
+- **runtime:** Add useDialect utility for type-safe dialect handlers ([6a626b2](https://github.com/myshkouski/nitro-drizzle/commit/6a626b2))
+- **fixtures:** Add database driver configurations to blog-api-legacy nitro config ([9f38448](https://github.com/myshkouski/nitro-drizzle/commit/9f38448))
+- **fixtures:** Use absolute paths in nitro config to support config layers ([ac56bc7](https://github.com/myshkouski/nitro-drizzle/commit/ac56bc7))
+- **datasources:** Support object map format for driver configuration ([28cb5e6](https://github.com/myshkouski/nitro-drizzle/commit/28cb5e6))
+
+### 🩹 Fixes
+
+- **migrations:** Use driver-specific migration configuration ([a3e614f](https://github.com/myshkouski/nitro-drizzle/commit/a3e614f))
+- **runtime:** Correct ConfigHookArgs to use ConfigVariants type ([d0b5329](https://github.com/myshkouski/nitro-drizzle/commit/d0b5329))
+- **runtime:** Validate driver support before accessing datasource ([8b45eb0](https://github.com/myshkouski/nitro-drizzle/commit/8b45eb0))
+- **dialect:** Validate handler existence before invocation ([33e5b8f](https://github.com/myshkouski/nitro-drizzle/commit/33e5b8f))
+
+### 💅 Refactors
+
+- **types:** Simplify UnwrapVariant type using infer ([d23d192](https://github.com/myshkouski/nitro-drizzle/commit/d23d192))
+- **templates:** Extract type name constants for shared imports ([0102e0f](https://github.com/myshkouski/nitro-drizzle/commit/0102e0f))
+- **templates:** Adopt utility functions for type generation ([86363df](https://github.com/myshkouski/nitro-drizzle/commit/86363df))
+- **types:** ⚠️  Simplify datasource type inference and resolution ([e920d5a](https://github.com/myshkouski/nitro-drizzle/commit/e920d5a))
+- **runtime:** ⚠️  Use infer for variant mapping and internalize handlers ([521ee7b](https://github.com/myshkouski/nitro-drizzle/commit/521ee7b))
+- **fixtures:** Remove explicit Promise<void> return types ([05a1d0a](https://github.com/myshkouski/nitro-drizzle/commit/05a1d0a))
+- **runtime:** Replace indexed access with conditional inference in DriverNameMapper ([43f5d73](https://github.com/myshkouski/nitro-drizzle/commit/43f5d73))
+- **migrations:** Simplify driver mapping in virtual module ([7729382](https://github.com/myshkouski/nitro-drizzle/commit/7729382))
+- **tests:** Restructure legacy nitro tests for parameterized driver testing ([e7e8321](https://github.com/myshkouski/nitro-drizzle/commit/e7e8321))
+- **fixtures:** Update meta endpoint to use datasource registry ([b40901c](https://github.com/myshkouski/nitro-drizzle/commit/b40901c))
+
+### 📦 Build
+
+- **fixtures:** Add nitropack build script to blog-api-legacy ([7eb4b29](https://github.com/myshkouski/nitro-drizzle/commit/7eb4b29))
+
+### 🏡 Chore
+
+- **migrations:** Remove debug logging from migration execution ([d71392c](https://github.com/myshkouski/nitro-drizzle/commit/d71392c))
+- **config:** Remove debug flag from blog-api-legacy nitro config ([b343d9d](https://github.com/myshkouski/nitro-drizzle/commit/b343d9d))
+
+### ✅ Tests
+
+- **tests:** Use nitro.options.output.serverDir instead of hardcoded .output path ([5680408](https://github.com/myshkouski/nitro-drizzle/commit/5680408))
+- **tests:** Consolidate database driver tests into blog-api test suite ([2a63b3b](https://github.com/myshkouski/nitro-drizzle/commit/2a63b3b))
+- **tests:** Reorganize test structure into e2e and unit directories ([3e95d0a](https://github.com/myshkouski/nitro-drizzle/commit/3e95d0a))
+
+#### ⚠️ Breaking Changes
+
+- **types:** ⚠️  Simplify datasource type inference and resolution ([e920d5a](https://github.com/myshkouski/nitro-drizzle/commit/e920d5a))
+- **runtime:** ⚠️  Use infer for variant mapping and internalize handlers ([521ee7b](https://github.com/myshkouski/nitro-drizzle/commit/521ee7b))
+
+### ❤️ Contributors
+
+- Alexei Myshkouski ([@myshkouski](https://github.com/myshkouski))
+
 ## v0.3.0-beta.3
 
 [compare changes](https://github.com/myshkouski/nitro-drizzle/compare/v0.3.0-beta.2...v0.3.0-beta.3)
