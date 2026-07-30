@@ -35,7 +35,12 @@ import { isLegacy } from "./utils/nitro";
  * Datasource-specific configuration options.
  */
 type DatasourceOptionsMapper<T extends Variant<Connector<any, any, any, any>, ConnectorSpecifier>> =
-  T extends any ? Variant<{ drivers: readonly string[] }, Pick<T["selector"], "name">> : never;
+  T extends any
+    ? Variant<
+        { drivers: readonly string[] | { [name: string]: boolean } },
+        Pick<T["selector"], "name">
+      >
+    : never;
 
 type DatasourceOptionsVariants = DatasourceOptionsMapper<ConnectorVariants>;
 
@@ -109,6 +114,7 @@ export function defineModuleConfig(options?: ModuleOptions): ModuleConfig {
 const module: LegacyNitroModule & NitroModule = {
   name: pkgName,
   async setup(nitro) {
+    const logger = nitro.logger.withTag(pkgName);
     const moduleConfig = defineModuleConfig(nitro.options.drizzle);
 
     const resolver = createResolver(nitro.options.rootDir, {
@@ -117,7 +123,7 @@ const module: LegacyNitroModule & NitroModule = {
 
     const serverDir = isLegacy(nitro) ? nitro.options.srcDir : nitro.options.serverDir;
     if (!serverDir) {
-      nitro.logger.info("No server directory configured.");
+      logger.info("No server directory configured.");
       return;
     }
 
@@ -137,7 +143,7 @@ const module: LegacyNitroModule & NitroModule = {
       cwd: process.cwd(),
       resolver: resolver,
       baseDir,
-      logger: nitro.logger,
+      logger,
       configPattern: moduleConfig.configPattern,
       datasources: { ...moduleConfig.datasources },
       migrations: moduleConfig.migrations || void 0,

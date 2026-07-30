@@ -135,10 +135,15 @@ class DefaultContext implements Context {
 
       const datasources: DatasourceInfo[] = Object.entries(datasourceOptions).map(
         ([name, options]) => {
+          const drivers: readonly string[] = Array.isArray(options.drivers)
+            ? options.drivers
+            : Object.entries(options.drivers as { [name: string]: boolean })
+                .filter(([_name, enabled]) => enabled)
+                .map(([name]) => name);
           return {
             name,
             enabled: true,
-            drivers: options.drivers.map((driverName) => {
+            drivers: drivers.map((driverName) => {
               const dialect = driverToDialect(driverName);
               const drizzleConfig = drizzleConfigs.find((config) => {
                 return config.name == name && config.dialect == dialect;
@@ -387,7 +392,7 @@ export interface ContextOptions {
   /**
    * Connector options
    */
-  datasources: Record<string, { drivers: readonly string[] }>;
+  datasources: Record<string, { drivers: readonly string[] | { [name: string]: boolean } }>;
 
   migrations: MigrationOptions | undefined;
 
