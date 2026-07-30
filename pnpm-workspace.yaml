@@ -1,5 +1,6 @@
 packages:
   - fixtures/*
+  - tests/e2e/*
   - playground
 
 allowBuilds:

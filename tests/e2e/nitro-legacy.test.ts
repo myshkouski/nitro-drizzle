@@ -1,14 +1,16 @@
 import { afterAll, beforeAll, describe } from "vitest";
 import { buildLegacyNitro } from "./nitro-legacy";
-import { setupNitroTest } from "./setup";
+import { setupNitroTest } from "./setup-test";
 import { buildNitro } from "./nitro";
 import { PostgreSqlContainer } from "@testcontainers/postgresql";
 import { MySqlContainer } from "@testcontainers/mysql";
 import type { StartedTestContainer } from "testcontainers";
 import type { ConfigOf } from "nitro-drizzle/runtime";
+import { hash } from "ohash";
 
 type TestCase = {
-  driver: string;
+  driver: "postgresql" | "mysql" | "pglite" | "sqlite" | "d1";
+  preset?: "cloudflare-module" | "node-listener";
   meta?: Record<string, any>;
   connector?: () => Promise<{ container: StartedTestContainer; config: object }>;
 };
@@ -19,6 +21,7 @@ const testCases: TestCase[] = [
     meta: {
       dialect: "SQLiteSyncDialect",
       database: "BetterSQLite3Database",
+      drivers: ["sqlite"],
     },
   },
   {
@@ -26,6 +29,7 @@ const testCases: TestCase[] = [
     meta: {
       dialect: "PgDialect",
       database: "PgliteDatabase",
+      drivers: ["pglite"],
     },
   },
   {
@@ -40,6 +44,7 @@ const testCases: TestCase[] = [
     meta: {
       dialect: "PgDialect",
       database: "PostgresJsDatabase",
+      drivers: ["postgresql"],
     },
   },
   {
@@ -54,12 +59,25 @@ const testCases: TestCase[] = [
     meta: {
       dialect: "MySqlDialect",
       database: "MySql2Database",
+      drivers: ["mysql"],
+    },
+  },
+  {
+    driver: "d1",
+    preset: "cloudflare-module",
+    meta: {
+      // dialect: "unknown",
+      database: "DrizzleD1Database",
+      drivers: ["d1"],
     },
   },
 ];
 
+const nitroRootDir = "tests/e2e/nitro-legacy";
+
 describe("legacy nitro", async () => {
-  describe.each(testCases)("driver: $driver", ({ driver, connector, meta }) => {
+  describe.each(testCases)("driver: $driver", (testCase) => {
+    const { driver, preset, connector, meta } = testCase;
     let container: StartedTestContainer | null;
     let runtimeDriverConfig: any | undefined;
 
@@ -72,29 +90,40 @@ describe("legacy nitro", async () => {
     }, 120_000);
 
     afterAll(async () => {
-      if (container) {
-        await container.stop();
-        container = null;
-      }
+      await container?.stop();
     });
 
     setupNitroTest({
       meta,
-      async listener() {
-        const runtimeConfig = {
-          drizzle: {
-            content: {
-              driver,
-              [driver]: runtimeDriverConfig,
-            },
-            users: {
-              driver,
-              [driver]: runtimeDriverConfig,
+      async createListener() {
+        const configHash = hash(testCase);
+        const driversToInclude = {
+          drivers: { [driver]: true },
+        };
+        return await buildLegacyNitro(nitroRootDir, `.output/test/${driver}-${configHash}`, {
+          preset,
+          runtimeConfig: {
+            drizzle: {
+              content: {
+                driver,
+                [driver]: runtimeDriverConfig,
+              },
+              users: {
+                driver,
+                [driver]: runtimeDriverConfig,
+              },
             },
           },
-        };
-        return await buildLegacyNitro("fixtures/blog-api-legacy", `.output/test/${driver}`, {
-          runtimeConfig,
+          drizzle: {
+            datasources: {
+              content: {
+                ...driversToInclude,
+              },
+              users: {
+                ...driversToInclude,
+              },
+            },
+          },
         });
       },
     });
@@ -103,8 +132,8 @@ describe("legacy nitro", async () => {
 
 describe("nitro", { skip: true }, () => {
   setupNitroTest({
-    listener() {
-      return buildNitro("fixtures/blog-api");
+    async createListener() {
+      return await buildNitro(nitroRootDir);
     },
   });
 });

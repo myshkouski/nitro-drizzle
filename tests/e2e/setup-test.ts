@@ -1,21 +1,24 @@
-import type { RequestListener } from "http";
-import { listen, type Listener } from "listhen";
 import { afterAll, beforeAll, expect, it } from "vitest";
+
+export type Listener = {
+  url: string | URL;
+  close(): Promise<void>;
+};
 
 export type SetupNitroTestOptions = {
   meta?: Record<string, string>;
-  listener(): Promise<RequestListener>;
+  createListener(): Promise<Listener>;
 };
 
 export function setupNitroTest(options: SetupNitroTestOptions) {
   let listener: Listener;
 
   beforeAll(async () => {
-    listener = await listen(await options.listener());
-  });
+    listener = await options.createListener();
+  }, 120_000);
 
   afterAll(async () => {
-    await listener.close();
+    await listener?.close();
   });
 
   it("should be healthy", { timeout: 30_000 }, async () => {

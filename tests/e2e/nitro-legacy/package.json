@@ -1,0 +1,13 @@
+{
+  "name": "@nitro-drizzle/tests-e2e-nitro-legacy",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nitropack build",
+    "dev:prepare": "nitropack prepare"
+  },
+  "dependencies": {
+    "nitro-drizzle": "workspace:^",
+    "nitropack": "catalog:"
+  }
+}
