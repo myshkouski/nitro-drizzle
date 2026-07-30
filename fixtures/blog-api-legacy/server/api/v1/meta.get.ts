@@ -1,17 +1,16 @@
 import { useDatasource } from "nitro-drizzle/runtime";
-import type { Datasource } from "nitro-drizzle/drivers";
+// @ts-expect-error no type definitions for internal "#nitro-drizzle/runtime"
+import { useDatasourceRegistry } from "#nitro-drizzle/runtime";
 
 export default defineEventHandler(async () => {
-  const contentDatasource = await useDatasource("users");
-  const usersDatasource = await useDatasource("users");
-
   return {
-    content: await getDatasourceMeta(contentDatasource),
-    users: await getDatasourceMeta(usersDatasource),
+    content: await getDatasourceMeta("content"),
+    users: await getDatasourceMeta("users"),
   };
 });
 
-async function getDatasourceMeta(datasource: Datasource<any, any, any>) {
+async function getDatasourceMeta(name: string) {
+  const datasource = await useDatasource(name);
   let ready = false;
   try {
     await datasource.waitReady();
@@ -21,10 +20,19 @@ async function getDatasourceMeta(datasource: Datasource<any, any, any>) {
   return {
     ready,
     database: getConstructorName(datasource.database),
-    dialect: getConstructorName(datasource.database.dialect),
+    dialect: getConstructorName(
+      // @ts-expect-error
+      datasource.database.dialect,
+    ),
+    drivers: getDatasourceDrivers(name),
   };
 }
 
 function getConstructorName(obj: any) {
   return Object.getPrototypeOf(obj).constructor.name;
+}
+
+export function getDatasourceDrivers(name: string): readonly string[] {
+  const datasourceRegistry = useDatasourceRegistry();
+  return Object.keys(datasourceRegistry[name]);
 }
