@@ -23,6 +23,15 @@ export default defineNitroConfig({
     drizzle: {
       content: {
         driver: "",
+        mysql: {
+          url: "",
+        },
+        postgresql: {
+          url: "",
+        },
+        pglite: {
+          dataDir: "memory://",
+        },
         sqlite: {
           url: ":memory:",
         },
@@ -32,11 +41,17 @@ export default defineNitroConfig({
       },
       users: {
         driver: "",
+        mysql: {
+          url: "",
+        },
         postgresql: {
           url: "",
         },
         pglite: {
           dataDir: "memory://",
+        },
+        sqlite: {
+          url: ":memory:",
         },
         d1: {
           binding: "users",
