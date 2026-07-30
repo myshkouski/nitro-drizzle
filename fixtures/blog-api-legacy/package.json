@@ -14,7 +14,8 @@
     "better-sqlite3": "catalog:drivers",
     "nitro-drizzle": "workspace:^",
     "nitro-drizzle-sample-data": "workspace:^",
-    "nitropack": "catalog:"
+    "nitropack": "catalog:",
+    "pathe": "^2.0.3"
   },
   "devDependencies": {
     "drizzle-kit": "catalog:",

@@ -1,4 +1,5 @@
 import { defineNitroConfig } from "nitropack/config";
+import { resolve } from "pathe";
 
 type DrizzleDriverName = "postgresql" | "mysql" | "pglite" | "sqlite" | "d1";
 const defaultDrizzleDrivers: DrizzleDriverName[] = [
@@ -13,7 +14,8 @@ const drizzleDrivers =
 
 export default defineNitroConfig({
   compatibilityDate: "latest",
-  srcDir: "server",
+  // use absolute path to support config layers
+  srcDir: resolve(import.meta.dirname, "server"),
   modules: ["nitro-drizzle"],
   experimental: {
     tasks: true,
@@ -61,7 +63,8 @@ export default defineNitroConfig({
     },
   },
   drizzle: {
-    baseDir: "~/db/drizzle",
+    // use absolute path to support config layers
+    baseDir: resolve(import.meta.dirname, "server", "db/drizzle"),
     migrations: {
       migrateOnInit: true,
     },
