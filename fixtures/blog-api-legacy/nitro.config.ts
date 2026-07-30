@@ -12,7 +12,6 @@ const drizzleDrivers =
   (process.env.DRIZZLE_DRIVERS?.split(",") as DrizzleDriverName[]) ?? defaultDrizzleDrivers;
 
 export default defineNitroConfig({
-  debug: true,
   compatibilityDate: "latest",
   srcDir: "server",
   modules: ["nitro-drizzle"],
