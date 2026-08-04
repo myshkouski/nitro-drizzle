@@ -5,13 +5,14 @@ packages:
 
 allowBuilds:
   "@parcel/watcher": false
-  better-sqlite3: false
+  better-sqlite3: true
   cpu-features: false
   deasync: false
   esbuild: false
-  lefthook: false
+  lefthook: true
   protobufjs: false
   ssh2: false
+  workerd: false
 
 catalogs:
   default:
@@ -32,6 +33,3 @@ catalogs:
     "@testcontainers/mysql": ^12.0.4
     "@testcontainers/postgresql": ^12.0.4
     testcontainers: ^12.0.4
-
-onlyBuiltDependencies:
-  - better-sqlite3
