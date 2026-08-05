@@ -12,10 +12,13 @@ const defaultDrizzleDrivers: DrizzleDriverName[] = [
 const drizzleDrivers =
   (process.env.DRIZZLE_DRIVERS?.split(",") as DrizzleDriverName[]) ?? defaultDrizzleDrivers;
 
+export const serverDir = resolve(import.meta.dirname, "server");
+export const drizzleDir = resolve(serverDir, "db/drizzle");
+
 export default defineNitroConfig({
   compatibilityDate: "latest",
   // use absolute path to support config layers
-  srcDir: resolve(import.meta.dirname, "server"),
+  srcDir: serverDir,
   modules: ["nitro-drizzle"],
   imports: false,
   experimental: {
@@ -25,39 +28,9 @@ export default defineNitroConfig({
     drizzle: {
       content: {
         driver: "",
-        mysql: {
-          url: "",
-        },
-        postgresql: {
-          url: "",
-        },
-        pglite: {
-          dataDir: "memory://",
-        },
-        sqlite: {
-          url: ":memory:",
-        },
-        d1: {
-          binding: "content",
-        },
       },
       users: {
         driver: "",
-        mysql: {
-          url: "",
-        },
-        postgresql: {
-          url: "",
-        },
-        pglite: {
-          dataDir: "memory://",
-        },
-        sqlite: {
-          url: ":memory:",
-        },
-        d1: {
-          binding: "users",
-        },
       },
       // @ts-expect-error
       unknown: {},
@@ -65,7 +38,7 @@ export default defineNitroConfig({
   },
   drizzle: {
     // use absolute path to support config layers
-    baseDir: resolve(import.meta.dirname, "server", "db/drizzle"),
+    baseDir: drizzleDir,
     migrations: {
       migrateOnInit: true,
     },
@@ -79,40 +52,5 @@ export default defineNitroConfig({
     },
     // @ts-expect-error
     unknownModuleOptions: {},
-  },
-  cloudflare: {
-    deployConfig: true,
-    nodeCompat: true,
-    wrangler: {
-      // durable_objects: {
-      //   bindings: [
-      //     {
-      //       name: "server",
-      //       class_name: "$DurableObject",
-      //     },
-      //   ],
-      // },
-      vars: {
-        NITRO_DRIZZLE_CONTENT_DRIVER: "d1",
-        NITRO_DRIZZLE_USERS_DRIVER: "d1",
-      },
-      d1_databases: [
-        {
-          database_name: "content",
-          binding: "content",
-        },
-        {
-          database_name: "users",
-          binding: "users",
-        },
-      ],
-    },
-  },
-  typescript: {
-    tsConfig: {
-      compilerOptions: {
-        verbatimModuleSyntax: true,
-      },
-    },
   },
 });
