@@ -1,3 +1,4 @@
+import { defineEventHandler } from "h3";
 import { useDatasource } from "nitro-drizzle/runtime";
 // @ts-expect-error no type definitions for internal "#nitro-drizzle/runtime"
 import { useDatasourceRegistry } from "#nitro-drizzle/runtime";

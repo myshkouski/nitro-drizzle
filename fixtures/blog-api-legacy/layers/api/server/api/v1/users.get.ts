@@ -1,3 +1,4 @@
+import { defineEventHandler } from "h3";
 import { useDialect } from "nitro-drizzle/runtime";
 
 export default defineEventHandler(async (event) => {

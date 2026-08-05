@@ -17,6 +17,7 @@ export default defineNitroConfig({
   // use absolute path to support config layers
   srcDir: resolve(import.meta.dirname, "server"),
   modules: ["nitro-drizzle"],
+  imports: false,
   experimental: {
     tasks: true,
   },
