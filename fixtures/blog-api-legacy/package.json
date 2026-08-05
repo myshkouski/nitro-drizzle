@@ -5,6 +5,7 @@
   "scripts": {
     "build": "nitropack build",
     "dev": "nitropack dev",
+    "typecheck": "tsc --noEmit",
     "dev:prepare": "nitropack prepare",
     "migrate:users": "nitropack task run drizzle:migrate --payload '{ \"name\": \"users\" }'",
     "migrate:content": "nitropack task run drizzle:migrate --payload '{ \"name\": \"content\" }'"
