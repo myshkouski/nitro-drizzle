@@ -1,3 +1,41 @@
+## v0.3.0-beta.5
+
+[compare changes](https://github.com/myshkouski/nitro-drizzle/compare/v0.3.0-beta.4...v0.3.0-beta.5)
+
+### 🚀 Enhancements
+
+- **fixtures:** Add package.json for blog-api-legacy api layer ([2872681](https://github.com/myshkouski/nitro-drizzle/commit/2872681))
+
+### 🩹 Fixes
+
+- **fixtures:** Add explicit h3 imports to blog-api-legacy api layer ([440edb7](https://github.com/myshkouski/nitro-drizzle/commit/440edb7))
+- **middleware:** Add srvx import to context module ([21cf5de](https://github.com/myshkouski/nitro-drizzle/commit/21cf5de))
+
+### 💅 Refactors
+
+- **fixtures:** Restructure blog-api-legacy to use nitro config layers ([f32f58e](https://github.com/myshkouski/nitro-drizzle/commit/f32f58e))
+- **scripts:** Replace typecheck:fixtures with typecheck and add fixture typecheck ([48941c8](https://github.com/myshkouski/nitro-drizzle/commit/48941c8))
+- **fixtures/blog-api-legacy:** Move runtime and deployment config from api layer to root nitro config ([85e99a9](https://github.com/myshkouski/nitro-drizzle/commit/85e99a9))
+
+### 📦 Build
+
+- **deps:** Update @cloudflare/workers-types to ^5.20260722.1 ([6a1b5c8](https://github.com/myshkouski/nitro-drizzle/commit/6a1b5c8))
+- **deps:** Bump dependencies and update workspace catalogs ([d1c5a11](https://github.com/myshkouski/nitro-drizzle/commit/d1c5a11))
+
+### 🏡 Chore
+
+- **config:** Remove lefthook and update pnpm workspace configuration ([7d318b8](https://github.com/myshkouski/nitro-drizzle/commit/7d318b8))
+- **fixtures/blog-api-legacy:** Add "type": "module" and "main" entry to api layer package.json ([5a41f9b](https://github.com/myshkouski/nitro-drizzle/commit/5a41f9b))
+- Update packageManager to pnpm 11.20.0 ([840842c](https://github.com/myshkouski/nitro-drizzle/commit/840842c))
+
+### 🤖 CI
+
+- **workflow:** Separate workspace and recursive typecheck steps ([e507baa](https://github.com/myshkouski/nitro-drizzle/commit/e507baa))
+
+### ❤️ Contributors
+
+- Alexei Myshkouski ([@myshkouski](https://github.com/myshkouski))
+
 ## v0.3.0-beta.4
 
 [compare changes](https://github.com/myshkouski/nitro-drizzle/compare/v0.3.0-beta.3...v0.3.0-beta.4)
