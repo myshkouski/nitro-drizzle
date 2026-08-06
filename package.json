@@ -50,8 +50,7 @@
     "release": "changelogen --release"
   },
   "dependencies": {
-    "@types/better-sqlite3": "^7.6.13",
-    "@typescript/native-preview": "7.0.0-dev.20260606.1",
+    "@types/better-sqlite3": "^9.6.0",
     "c12": "^3.3.4",
     "consola": "^3.4.2",
     "db0": "^0.3.4",
@@ -62,28 +61,28 @@
     "nitropack": "catalog:",
     "ohash": "^2.0.11",
     "pathe": "^2.0.3",
-    "rollup": "^4.62.2",
+    "rollup": "^4.62.4",
     "strip-indent": "^4.1.1",
     "tinyglobby": "^0.2.17",
     "unstorage": "^1.17.5"
   },
   "devDependencies": {
-    "@arethetypeswrong/core": "^0.18.4",
+    "@arethetypeswrong/core": "^0.18.5",
     "@testcontainers/mysql": "catalog:testcontainers",
     "@testcontainers/postgresql": "catalog:testcontainers",
-    "@types/node": "^25.9.5",
+    "@types/node": "^26.1.2",
     "@vitest/coverage-v8": "^4.1.10",
     "@vitest/ui": "^4.1.10",
     "changelogen": "^0.6.2",
     "lefthook": "^2.1.10",
-    "listhen": "^1.10.0",
-    "oxfmt": "^0.58.0",
-    "oxlint": "^1.73.0",
-    "oxlint-tsgolint": "^0.24.0",
-    "publint": "^0.3.21",
+    "listhen": "^1.10.1",
+    "oxfmt": "^0.62.0",
+    "oxlint": "^1.77.0",
+    "oxlint-tsgolint": "^7.0.2001",
+    "publint": "^0.3.23",
     "testcontainers": "catalog:testcontainers",
-    "tsdown": "^0.22.4",
-    "typescript": "^6.0.3",
+    "tsdown": "^0.22.14",
+    "typescript": "^7.0.2",
     "unplugin-unused": "^0.5.7",
     "vitest": "^4.1.10",
     "wrangler": "catalog:"
@@ -97,7 +96,7 @@
     "h3": "catalog:",
     "mysql2": "catalog:drivers",
     "postgres": "catalog:drivers",
-    "srvx": "^0.11.21"
+    "srvx": "^0.12.5"
   },
   "peerDependenciesMeta": {
     "@cloudflare/workers-types": {
