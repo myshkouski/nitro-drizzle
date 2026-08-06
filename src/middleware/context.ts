@@ -1,6 +1,7 @@
 import { defineMiddleware } from "nitro";
 import { useNitroHooks } from "nitro/app";
 import type { Middleware } from "nitro/h3";
+import "srvx";
 
 let eventContext: DrizzleContext | undefined;
 
