@@ -33,3 +33,7 @@ catalogs:
     "@testcontainers/mysql": ^12.1.0
     "@testcontainers/postgresql": ^12.1.0
     testcontainers: ^12.1.0
+
+minimumReleaseAgeExclude:
+  - esbuild@0.24.3
+  - undici@7.29.0
