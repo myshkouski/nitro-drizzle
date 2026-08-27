@@ -1,3 +1,23 @@
+## v0.3.0-beta.6
+
+[compare changes](https://github.com/myshkouski/nitro-drizzle/compare/v0.3.0-beta.5...v0.3.0-beta.6)
+
+### 🚀 Enhancements
+
+- **runtime:** Refactor useDialect to callback-based API with datasource context ([1553590](https://github.com/myshkouski/nitro-drizzle/commit/1553590))
+
+### 📦 Build
+
+- Add minimumReleaseAgeExclude for esbuild and undici ([c3fbbb5](https://github.com/myshkouski/nitro-drizzle/commit/c3fbbb5))
+
+### 🏡 Chore
+
+- Rename fixture packages to scoped @nitro-drizzle namespace ([c030bd9](https://github.com/myshkouski/nitro-drizzle/commit/c030bd9))
+
+### ❤️ Contributors
+
+- Alexei Myshkouski ([@myshkouski](https://github.com/myshkouski))
+
 ## v0.3.0-beta.5
 
 [compare changes](https://github.com/myshkouski/nitro-drizzle/compare/v0.3.0-beta.4...v0.3.0-beta.5)
