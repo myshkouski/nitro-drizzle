@@ -19,26 +19,31 @@ export default defineNitroPlugin((nitro) => {
 });
 
 async function seedUsers() {
-  await useDialect("users", {
-    async postgresql({ database, schema }) {
-      await pgOnConflictDoNothing(
-        usePrimaryColumns(schema.authors),
-        database.insert(schema.authors).values(sampleData.authors),
-      );
-    },
+  await useDialect("users", async ({ datasource, dialect }) => {
+    switch (dialect) {
+      case "postgresql":
+        await pgOnConflictDoNothing(
+          usePrimaryColumns(datasource.schema.authors),
+          datasource.database.insert(datasource.schema.authors).values(sampleData.authors),
+        );
 
-    async mysql({ database, schema }) {
-      await mysqlOnConflictDoNothing(
-        usePrimaryColumns(schema.authors),
-        database.insert(schema.authors).values(sampleData.authors),
-      );
-    },
+        break;
 
-    async sqlite({ database, schema }) {
-      await sqliteOnConflictDoNothing(
-        usePrimaryColumns(schema.authors),
-        database.insert(schema.authors).values(sampleData.authors),
-      );
-    },
+      case "mysql":
+        await mysqlOnConflictDoNothing(
+          usePrimaryColumns(datasource.schema.authors),
+          datasource.database.insert(datasource.schema.authors).values(sampleData.authors),
+        );
+
+        break;
+
+      case "sqlite":
+        await sqliteOnConflictDoNothing(
+          usePrimaryColumns(datasource.schema.authors),
+          datasource.database.insert(datasource.schema.authors).values(sampleData.authors),
+        );
+
+        break;
+    }
   });
 }

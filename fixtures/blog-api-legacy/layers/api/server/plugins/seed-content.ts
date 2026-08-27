@@ -1,7 +1,7 @@
 import { defineNitroPlugin } from "nitropack/runtime";
 import { consola } from "consola";
 import { colorize } from "consola/utils";
-import { useDialect } from "nitro-drizzle/runtime";
+import { useDialect, type TransactionOf } from "nitro-drizzle/runtime";
 import { usePrimaryColumns } from "nitro-drizzle/utils";
 import { onConflictDoNothing as sqliteOnConflictDoNothing } from "nitro-drizzle/dialects/sqlite";
 import { onConflictDoNothing as pgOnConflictDoNothing } from "nitro-drizzle/dialects/postgresql";
@@ -19,39 +19,52 @@ export default defineNitroPlugin((nitro) => {
 });
 
 async function seedContent() {
-  await useDialect("content", {
-    async postgresql({ database, schema }) {
-      await pgOnConflictDoNothing(
-        usePrimaryColumns(schema.posts),
-        database.insert(schema.posts).values(sampleData.posts),
-      );
+  await useDialect("content", async ({ datasource, dialect }) => {
+    switch (dialect) {
+      case "postgresql":
+        await datasource.database.transaction(
+          async (tx: TransactionOf<typeof datasource.database>) => {
+            await pgOnConflictDoNothing(
+              usePrimaryColumns(datasource.schema.posts),
+              tx.insert(datasource.schema.posts).values(sampleData.posts),
+            );
 
-      await pgOnConflictDoNothing(
-        usePrimaryColumns(schema.comments),
-        database.insert(schema.comments).values(sampleData.comments),
-      );
-    },
-    async mysql({ database, schema }) {
-      await mysqlOnConflictDoNothing(
-        usePrimaryColumns(schema.posts),
-        database.insert(schema.posts).values(sampleData.posts),
-      );
+            await pgOnConflictDoNothing(
+              usePrimaryColumns(datasource.schema.comments),
+              tx.insert(datasource.schema.comments).values(sampleData.comments),
+            );
+          },
+        );
 
-      await mysqlOnConflictDoNothing(
-        usePrimaryColumns(schema.comments),
-        database.insert(schema.comments).values(sampleData.comments),
-      );
-    },
-    async sqlite({ database, schema }) {
-      await sqliteOnConflictDoNothing(
-        usePrimaryColumns(schema.posts),
-        database.insert(schema.posts).values(sampleData.posts),
-      );
+        break;
 
-      await sqliteOnConflictDoNothing(
-        usePrimaryColumns(schema.comments),
-        database.insert(schema.comments).values(sampleData.comments),
-      );
-    },
+      case "mysql":
+        await datasource.database.transaction(async (tx) => {
+          await mysqlOnConflictDoNothing(
+            usePrimaryColumns(datasource.schema.posts),
+            tx.insert(datasource.schema.posts).values(sampleData.posts),
+          );
+
+          await mysqlOnConflictDoNothing(
+            usePrimaryColumns(datasource.schema.comments),
+            tx.insert(datasource.schema.comments).values(sampleData.comments),
+          );
+        });
+
+        break;
+
+      case "sqlite":
+        await sqliteOnConflictDoNothing(
+          usePrimaryColumns(datasource.schema.posts),
+          datasource.database.insert(datasource.schema.posts).values(sampleData.posts),
+        );
+
+        await sqliteOnConflictDoNothing(
+          usePrimaryColumns(datasource.schema.comments),
+          datasource.database.insert(datasource.schema.comments).values(sampleData.comments),
+        );
+
+        break;
+    }
   });
 }

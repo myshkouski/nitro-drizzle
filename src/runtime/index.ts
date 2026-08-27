@@ -69,6 +69,18 @@ export type DatasourceOf<T extends Connector<any, any, any, any>> = T extends (
   ? R extends Datasource<any, any, any>
     ? R
     : never
+  : T extends (...args: any) => any
+    ? Parameters<Parameters<T>[0]>[0]
+    : never;
+
+/**
+ * Infers the transaction type from a datasource, database instance, or transaction function.
+ * @template T - The datasource, database instance, or transaction function type
+ */
+export type TransactionOf<T> = T extends {
+  transaction: (transaction: (tx: infer TTx, ...args: any[]) => any, ...args: any[]) => any;
+}
+  ? TTx
   : never;
 
 type DatasourceMapper<T extends Variant<Connector<any, any, any, any>, ConnectorSpecifier>> =
