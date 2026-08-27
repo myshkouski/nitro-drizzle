@@ -1,5 +1,5 @@
 {
-  "name": "nitro-starter",
+  "name": "@nitro-drizzle/fixtures-blog-api",
   "type": "module",
   "imports": {
     "#*": "./*"
@@ -11,10 +11,10 @@
     "preview": "nitro preview"
   },
   "devDependencies": {
+    "@nitro-drizzle/fixtures-sample-data": "workspace:^",
     "@types/node": "latest",
     "nitro": "catalog:",
     "nitro-drizzle": "workspace:^",
-    "nitro-drizzle-sample-data": "workspace:^",
     "typescript": "latest"
   }
 }

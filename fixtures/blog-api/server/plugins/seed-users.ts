@@ -6,7 +6,7 @@ import { onConflictDoNothing as sqliteOnConflictDoNothing } from "nitro-drizzle/
 import { onConflictDoNothing as pgOnConflictDoNothing } from "nitro-drizzle/dialects/postgresql";
 import { usePrimaryColumns } from "nitro-drizzle/utils";
 
-import * as sampleData from "nitro-drizzle-sample-data/users";
+import * as sampleData from "@nitro-drizzle/fixtures-sample-data/users";
 
 export default defineNitroPlugin((nitro) => {
   nitro.hooks.hook("drizzle:migrate:after", async (name) => {

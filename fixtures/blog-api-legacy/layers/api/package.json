@@ -1,5 +1,5 @@
 {
-  "name": "nitro-drizzle-blog-api-legacy-layer",
+  "name": "@nitro-drizzle/fixtures-blog-api-legacy-layer",
   "version": "0.1.0",
   "private": true,
   "type": "module",

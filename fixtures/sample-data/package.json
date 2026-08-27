@@ -1,5 +1,5 @@
 {
-  "name": "nitro-drizzle-sample-data",
+  "name": "@nitro-drizzle/fixtures-sample-data",
   "private": true,
   "type": "module",
   "exports": {

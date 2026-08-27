@@ -188,18 +188,18 @@ importers:
 
   fixtures/blog-api:
     devDependencies:
+      '@nitro-drizzle/fixtures-sample-data':
+        specifier: workspace:^
+        version: link:../sample-data
       '@types/node':
         specifier: latest
-        version: 26.1.2
+        version: 26.3.0
       nitro:
         specifier: 'catalog:'
-        version: 3.0.260610-beta(@electric-sql/pglite@0.5.4)(better-sqlite3@12.11.1)(chokidar@5.0.0)(dotenv@17.4.2)(drizzle-orm@0.45.2(@cloudflare/workers-types@5.20260804.1)(@electric-sql/pglite@0.5.4)(@types/better-sqlite3@9.6.0)(better-sqlite3@12.11.1)(mysql2@3.23.2(@types/node@26.1.2))(postgres@3.4.9))(giget@3.3.1)(ioredis@5.11.1(supports-color@10.2.2))(jiti@2.7.0)(lru-cache@11.5.2)(mysql2@3.23.2(@types/node@26.1.2))(rollup@4.62.4)(vite@8.2.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.49.2)(tsx@4.23.7)(yaml@2.9.0))(wrangler@4.118.0(@cloudflare/workers-types@5.20260804.1))
+        version: 3.0.260610-beta(@electric-sql/pglite@0.5.4)(better-sqlite3@12.11.1)(chokidar@5.0.0)(dotenv@17.4.2)(drizzle-orm@0.45.2(@cloudflare/workers-types@5.20260804.1)(@electric-sql/pglite@0.5.4)(@types/better-sqlite3@9.6.0)(better-sqlite3@12.11.1)(mysql2@3.23.2(@types/node@26.3.0))(postgres@3.4.9))(giget@3.3.1)(ioredis@5.11.1(supports-color@10.2.2))(jiti@2.7.0)(lru-cache@11.5.2)(mysql2@3.23.2(@types/node@26.3.0))(rollup@4.62.4)(vite@8.2.0(@types/node@26.3.0)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.49.2)(tsx@4.23.7)(yaml@2.9.0))(wrangler@4.118.0(@cloudflare/workers-types@5.20260804.1))
       nitro-drizzle:
         specifier: workspace:^
         version: link:../..
-      nitro-drizzle-sample-data:
-        specifier: workspace:^
-        version: link:../sample-data
       typescript:
         specifier: latest
         version: 7.0.2
@@ -209,15 +209,15 @@ importers:
       '@electric-sql/pglite':
         specifier: catalog:drivers
         version: 0.5.4
+      '@nitro-drizzle/fixtures-sample-data':
+        specifier: workspace:^
+        version: link:../sample-data
       better-sqlite3:
         specifier: catalog:drivers
         version: 12.11.1
       nitro-drizzle:
         specifier: workspace:^
         version: link:../..
-      nitro-drizzle-sample-data:
-        specifier: workspace:^
-        version: link:../sample-data
       nitropack:
         specifier: 'catalog:'
         version: 2.13.4(@electric-sql/pglite@0.5.4)(better-sqlite3@12.11.1)(drizzle-orm@0.45.2(@cloudflare/workers-types@5.20260804.1)(@electric-sql/pglite@0.5.4)(@types/better-sqlite3@9.6.0)(better-sqlite3@12.11.1)(mysql2@3.23.2(@types/node@26.1.2))(postgres@3.4.9))(mysql2@3.23.2(@types/node@26.1.2))(rolldown@1.2.3)(srvx@0.12.5)(supports-color@10.2.2)(vite@8.2.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.49.2)(tsx@4.23.7)(yaml@2.9.0))
@@ -1718,6 +1718,9 @@ packages:
 
   '@types/node@26.1.2':
     resolution: {integrity: sha512-Vu4a5UFA9rIIFJ7rB/Vaafh9lrCQszopTCx6KjFboXTGQbPNasehVR5TEiithSDGyd1DEiUByggTZsg8jukeIg==}
+
+  '@types/node@26.3.0':
+    resolution: {integrity: sha512-L3fgrnchriRC2ExBflb8j4uZZURHZfQsmQeyVzhjcHW4kkwVyo8/0h1B2MVzMTrYUJYu6G7EWs14hW/L9putqw==}
 
   '@types/resolve@1.20.2':
     resolution: {integrity: sha512-60BCwRFOZCQhDncwQdxxeOEEkbc5dIMccYLwbxsS4TUNeVECQ/pBJ0j09mrHOl/JJvpRPGwO9SvE4nR2Nb/a4Q==}
@@ -5317,6 +5320,10 @@ snapshots:
     dependencies:
       undici-types: 8.3.0
 
+  '@types/node@26.3.0':
+    dependencies:
+      undici-types: 8.3.0
+
   '@types/resolve@1.20.2': {}
 
   '@types/ssh2-streams@0.1.13':
@@ -5868,6 +5875,13 @@ snapshots:
       drizzle-orm: 0.45.2(@cloudflare/workers-types@5.20260804.1)(@electric-sql/pglite@0.5.4)(@types/better-sqlite3@9.6.0)(better-sqlite3@12.11.1)(mysql2@3.23.2(@types/node@26.1.2))(postgres@3.4.9)
       mysql2: 3.23.2(@types/node@26.1.2)
 
+  db0@0.3.4(@electric-sql/pglite@0.5.4)(better-sqlite3@12.11.1)(drizzle-orm@0.45.2(@cloudflare/workers-types@5.20260804.1)(@electric-sql/pglite@0.5.4)(@types/better-sqlite3@9.6.0)(better-sqlite3@12.11.1)(mysql2@3.23.2(@types/node@26.3.0))(postgres@3.4.9))(mysql2@3.23.2(@types/node@26.3.0)):
+    optionalDependencies:
+      '@electric-sql/pglite': 0.5.4
+      better-sqlite3: 12.11.1
+      drizzle-orm: 0.45.2(@cloudflare/workers-types@5.20260804.1)(@electric-sql/pglite@0.5.4)(@types/better-sqlite3@9.6.0)(better-sqlite3@12.11.1)(mysql2@3.23.2(@types/node@26.3.0))(postgres@3.4.9)
+      mysql2: 3.23.2(@types/node@26.3.0)
+
   debug@4.4.3(supports-color@10.2.2):
     dependencies:
       ms: 2.1.3
@@ -5946,6 +5960,16 @@ snapshots:
       better-sqlite3: 12.11.1
       mysql2: 3.23.2(@types/node@26.1.2)
       postgres: 3.4.9
+
+  drizzle-orm@0.45.2(@cloudflare/workers-types@5.20260804.1)(@electric-sql/pglite@0.5.4)(@types/better-sqlite3@9.6.0)(better-sqlite3@12.11.1)(mysql2@3.23.2(@types/node@26.3.0))(postgres@3.4.9):
+    optionalDependencies:
+      '@cloudflare/workers-types': 5.20260804.1
+      '@electric-sql/pglite': 0.5.4
+      '@types/better-sqlite3': 9.6.0
+      better-sqlite3: 12.11.1
+      mysql2: 3.23.2(@types/node@26.3.0)
+      postgres: 3.4.9
+    optional: true
 
   dts-resolver@3.0.0: {}
 
@@ -6577,6 +6601,19 @@ snapshots:
       named-placeholders: 1.1.6
       sql-escaper: 1.5.1
 
+  mysql2@3.23.2(@types/node@26.3.0):
+    dependencies:
+      '@types/node': 26.3.0
+      aws-ssl-profiles: 1.1.2
+      denque: 2.1.0
+      generate-function: 2.3.1
+      iconv-lite: 0.7.3
+      long: 5.3.2
+      lru.min: 1.1.4
+      named-placeholders: 1.1.6
+      sql-escaper: 1.5.1
+    optional: true
+
   named-placeholders@1.1.6:
     dependencies:
       lru.min: 1.1.4
@@ -6612,6 +6649,60 @@ snapshots:
       jiti: 2.7.0
       rollup: 4.62.4
       vite: 8.2.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.49.2)(tsx@4.23.7)(yaml@2.9.0)
+    transitivePeerDependencies:
+      - '@azure/app-configuration'
+      - '@azure/cosmos'
+      - '@azure/data-tables'
+      - '@azure/identity'
+      - '@azure/keyvault-secrets'
+      - '@azure/storage-blob'
+      - '@capacitor/preferences'
+      - '@deno/kv'
+      - '@electric-sql/pglite'
+      - '@libsql/client'
+      - '@netlify/blobs'
+      - '@netlify/runtime'
+      - '@planetscale/database'
+      - '@upstash/redis'
+      - '@vercel/blob'
+      - '@vercel/functions'
+      - '@vercel/kv'
+      - aws4fetch
+      - better-sqlite3
+      - chokidar
+      - drizzle-orm
+      - idb-keyval
+      - ioredis
+      - lru-cache
+      - miniflare
+      - mongodb
+      - mysql2
+      - sqlite3
+      - uploadthing
+      - wrangler
+
+  nitro@3.0.260610-beta(@electric-sql/pglite@0.5.4)(better-sqlite3@12.11.1)(chokidar@5.0.0)(dotenv@17.4.2)(drizzle-orm@0.45.2(@cloudflare/workers-types@5.20260804.1)(@electric-sql/pglite@0.5.4)(@types/better-sqlite3@9.6.0)(better-sqlite3@12.11.1)(mysql2@3.23.2(@types/node@26.3.0))(postgres@3.4.9))(giget@3.3.1)(ioredis@5.11.1(supports-color@10.2.2))(jiti@2.7.0)(lru-cache@11.5.2)(mysql2@3.23.2(@types/node@26.3.0))(rollup@4.62.4)(vite@8.2.0(@types/node@26.3.0)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.49.2)(tsx@4.23.7)(yaml@2.9.0))(wrangler@4.118.0(@cloudflare/workers-types@5.20260804.1)):
+    dependencies:
+      consola: 3.4.2
+      crossws: 0.4.10(srvx@0.11.22)
+      db0: 0.3.4(@electric-sql/pglite@0.5.4)(better-sqlite3@12.11.1)(drizzle-orm@0.45.2(@cloudflare/workers-types@5.20260804.1)(@electric-sql/pglite@0.5.4)(@types/better-sqlite3@9.6.0)(better-sqlite3@12.11.1)(mysql2@3.23.2(@types/node@26.3.0))(postgres@3.4.9))(mysql2@3.23.2(@types/node@26.3.0))
+      env-runner: 0.1.16(wrangler@4.118.0(@cloudflare/workers-types@5.20260804.1))
+      h3: 2.0.1-rc.22(crossws@0.4.10(srvx@0.11.22))
+      hookable: 6.1.1
+      nf3: 0.3.23
+      ocache: 0.1.5
+      ofetch: 2.0.0-alpha.3
+      ohash: 2.0.11
+      rolldown: 1.2.3
+      srvx: 0.11.22
+      unenv: 2.0.0-rc.24
+      unstorage: 2.0.0-alpha.7(chokidar@5.0.0)(db0@0.3.4(@electric-sql/pglite@0.5.4)(better-sqlite3@12.11.1)(drizzle-orm@0.45.2(@cloudflare/workers-types@5.20260804.1)(@electric-sql/pglite@0.5.4)(@types/better-sqlite3@9.6.0)(better-sqlite3@12.11.1)(mysql2@3.23.2(@types/node@26.1.2))(postgres@3.4.9))(mysql2@3.23.2(@types/node@26.1.2)))(ioredis@5.11.1(supports-color@10.2.2))(lru-cache@11.5.2)(ofetch@2.0.0-alpha.3)
+    optionalDependencies:
+      dotenv: 17.4.2
+      giget: 3.3.1
+      jiti: 2.7.0
+      rollup: 4.62.4
+      vite: 8.2.0(@types/node@26.3.0)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.49.2)(tsx@4.23.7)(yaml@2.9.0)
     transitivePeerDependencies:
       - '@azure/app-configuration'
       - '@azure/cosmos'
@@ -7719,6 +7810,23 @@ snapshots:
       terser: 5.49.2
       tsx: 4.23.7
       yaml: 2.9.0
+
+  vite@8.2.0(@types/node@26.3.0)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.49.2)(tsx@4.23.7)(yaml@2.9.0):
+    dependencies:
+      lightningcss: 1.33.0
+      picomatch: 4.0.5
+      postcss: 8.5.25
+      rolldown: 1.2.3
+      tinyglobby: 0.2.17
+    optionalDependencies:
+      '@types/node': 26.3.0
+      esbuild: 0.28.1
+      fsevents: 2.3.3
+      jiti: 2.7.0
+      terser: 5.49.2
+      tsx: 4.23.7
+      yaml: 2.9.0
+    optional: true
 
   vitest@4.1.10(@types/node@26.1.2)(@vitest/coverage-v8@4.1.10)(@vitest/ui@4.1.10)(vite@8.2.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.49.2)(tsx@4.23.7)(yaml@2.9.0)):
     dependencies:

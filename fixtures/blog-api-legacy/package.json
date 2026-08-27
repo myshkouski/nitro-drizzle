@@ -12,9 +12,9 @@
   },
   "dependencies": {
     "@electric-sql/pglite": "catalog:drivers",
+    "@nitro-drizzle/fixtures-sample-data": "workspace:^",
     "better-sqlite3": "catalog:drivers",
     "nitro-drizzle": "workspace:^",
-    "nitro-drizzle-sample-data": "workspace:^",
     "nitropack": "catalog:",
     "pathe": "^2.0.3"
   },
