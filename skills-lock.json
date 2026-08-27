@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "use-pnpm": {
+      "source": "microlinkhq/skills",
+      "sourceType": "github",
+      "skillPath": "use-pnpm/SKILL.md",
+      "computedHash": "e5542a46888b9949ac4b5fbfc33748a97416de285c0f41b18de2ee451cfb52ed"
+    }
+  }
+}
