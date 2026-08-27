@@ -9,8 +9,8 @@
 
 ## ✨ Features
 
-- **Datasource Management**: Easily configure and manage multiple Drizzle ORM datasources within your Nitro project.
-- **Multiple Database Drivers**: Support for various database drivers including SQLite (with `better-sqlite3`), PostgreSQL (with `pglite`), MySQL (with `mysql2`), and Cloudflare D1.
+- **Datasource Management**: Easily configure and manage multiple Drizzle ORM datasources within your Nitro project with granular driver activation/deactivation.
+- **Multiple Database Drivers**: Support for various database drivers including SQLite (with `better-sqlite3`), PostgreSQL (with `pglite`), MySQL (with `mysql2`), and Cloudflare D1. Drivers can be enabled or disabled via array entries (using underscore prefixes like `_d1`) or object maps (`{ sqlite: true, d1: false }`).
 - **Automatic Migrations**: Configure automatic database migrations on application initialization.
 - **Type-Safe Schemas**: Leverage Drizzle ORM's type-safe schemas for a better development experience.
 - **Nitro Task Integration**: Run Drizzle migrations as Nitro tasks.
@@ -47,7 +47,7 @@ export default defineNitroConfig({
   modules: ["nitro-drizzle"],
   drizzle: {
     datasources: {
-      content: { drivers: ["sqlite", "d1"] },
+      content: { drivers: ["sqlite", "d1", "_pglite"] }, // Use underscore prefix (e.g., _pglite) to exclude specific drivers, but preserve type safety
     },
   },
 });
