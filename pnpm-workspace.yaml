@@ -22,12 +22,12 @@ catalogs:
     nitro: 3.0.260610-beta
     nitropack: ^2.13.4
     tsdown: ^0.22.0
-    wrangler: ^4.118.0
+    wrangler: ^4.126.0
   drivers:
-    "@cloudflare/workers-types": ^5.20260804.1
-    "@electric-sql/pglite": ^0.5.4
+    "@cloudflare/workers-types": ^5.20260826.1
+    "@electric-sql/pglite": ^0.5.8
     better-sqlite3: ^12.11.1
-    mysql2: ^3.23.2
+    mysql2: ^3.24.2
     postgres: ^3.4.9
   testcontainers:
     "@testcontainers/mysql": ^12.1.0
