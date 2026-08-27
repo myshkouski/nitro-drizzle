@@ -1,3 +1,31 @@
+## v0.3.0
+
+[compare changes](https://github.com/myshkouski/nitro-drizzle/compare/v0.3.0-beta.6...v0.3.0)
+
+### 🚀 Enhancements
+
+- **skills:** Add use-pnpm agent skill and lockfile ([0730a33](https://github.com/myshkouski/nitro-drizzle/commit/0730a33))
+
+### 💅 Refactors
+
+- **drizzle:** Restructure driver config and filter disabled connectors ([9c4a05c](https://github.com/myshkouski/nitro-drizzle/commit/9c4a05c))
+
+### 📖 Documentation
+
+- **readme:** Document driver activation and deactivation patterns ([956c19d](https://github.com/myshkouski/nitro-drizzle/commit/956c19d))
+
+### 📦 Build
+
+- Bump packageManager pnpm version to 11.24.0 ([dd82da0](https://github.com/myshkouski/nitro-drizzle/commit/dd82da0))
+
+### 🏡 Chore
+
+- **lint:** Configure unused vars ignore patterns in oxlintrc ([1c85d3e](https://github.com/myshkouski/nitro-drizzle/commit/1c85d3e))
+
+### ❤️ Contributors
+
+- Alexei Myshkouski ([@myshkouski](https://github.com/myshkouski))
+
 ## v0.3.0-beta.6
 
 [compare changes](https://github.com/myshkouski/nitro-drizzle/compare/v0.3.0-beta.5...v0.3.0-beta.6)
