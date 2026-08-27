@@ -10,17 +10,8 @@ import {
   type ContextOptions,
   type MigrationOptions,
 } from "nitro-drizzle/context";
-import type {
-  VirtualModules,
-  MaybePromise,
-  NitroHookName,
-  Variant,
-  ConnectorSpecifier,
-  ConnectorVariants,
-  ExpandVariants,
-} from "nitro-drizzle/shared";
+import type { VirtualModules, MaybePromise, NitroHookName } from "nitro-drizzle/shared";
 import { pkgName } from "nitro-drizzle/meta";
-import type { Connector } from "nitro-drizzle/drivers";
 
 import { updateServerAssets } from "./utils/assets";
 import { addInlineExternals, addNoExternals } from "./utils/externals";
@@ -32,22 +23,14 @@ import { addPlugin } from "./internal/rollup";
 import { isLegacy } from "./utils/nitro";
 
 /**
- * Datasource-specific configuration options.
- */
-type DatasourceOptionsMapper<T extends Variant<Connector<any, any, any, any>, ConnectorSpecifier>> =
-  T extends any
-    ? Variant<
-        { drivers: readonly string[] | { [name: string]: boolean } },
-        Pick<T["selector"], "name">
-      >
-    : never;
-
-type DatasourceOptionsVariants = DatasourceOptionsMapper<ConnectorVariants>;
-
-/**
  * Datasource-specific configuration options mapped by datasource name.
  */
-export type DatasourceOptions = ExpandVariants<DatasourceOptionsVariants, ["name"]>;
+export type DatasourceOptions = Record<
+  string,
+  {
+    drivers: readonly string[] | { [name: string]: boolean };
+  }
+>;
 
 declare module "nitropack/types" {
   interface NitroOptions {

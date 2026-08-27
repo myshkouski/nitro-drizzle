@@ -2,15 +2,17 @@ import { defineNitroConfig } from "nitropack/config";
 import { resolve } from "pathe";
 
 type DrizzleDriverName = "postgresql" | "mysql" | "pglite" | "sqlite" | "d1";
-const defaultDrizzleDrivers: DrizzleDriverName[] = [
-  "postgresql",
-  "mysql",
-  "pglite",
-  "sqlite",
-  "d1",
+const defaultDrizzleDrivers: (DrizzleDriverName | `_${DrizzleDriverName}`)[] = [
+  "_postgresql",
+  "_mysql",
+  "_pglite",
+  "_sqlite",
+  "_d1",
 ];
-const drizzleDrivers =
-  (process.env.DRIZZLE_DRIVERS?.split(",") as DrizzleDriverName[]) ?? defaultDrizzleDrivers;
+const drizzleDrivers = [
+  ...defaultDrizzleDrivers,
+  ...((process.env.DRIZZLE_DRIVERS?.split(",") as DrizzleDriverName[]) ?? []),
+];
 
 export const serverDir = resolve(import.meta.dirname, "server");
 export const drizzleDir = resolve(serverDir, "db/drizzle");

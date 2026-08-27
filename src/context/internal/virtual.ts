@@ -64,6 +64,9 @@ export function runtimeVirtualModule(
         };
       });
     })
+    .filter(({ driver }) => {
+      return driver.enabled;
+    })
     .map(({ name, driver }, datasourceIndex) => {
       const connectorVarName = genConnectorModuleVariableName(datasourceIndex);
 

@@ -13,7 +13,7 @@ export default defineNitroPlugin((nitro) => {
     if (name !== "users") return;
 
     await seedUsers();
-    consola.info("Seed completed:", colorize("greenBright", name));
+    consola.info("Seed completed:", colorize("yellow", name));
   });
 });
 

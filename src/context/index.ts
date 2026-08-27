@@ -135,32 +135,53 @@ class DefaultContext implements Context {
 
       const datasources: DatasourceInfo[] = Object.entries(datasourceOptions).map(
         ([name, options]) => {
-          const drivers: readonly string[] = Array.isArray(options.drivers)
-            ? options.drivers
-            : Object.entries(options.drivers as { [name: string]: boolean })
-                .filter(([_name, enabled]) => enabled)
-                .map(([name]) => name);
+          const connectorOptions = Array.isArray(options.drivers)
+            ? (options.drivers as string[]).reduce(
+                (acc, driver) => {
+                  const match = driver.match(/^([_-]*)([^_]+)/);
+                  if (!match) throw new Error("Invalid driver name format");
+                  const [_, disabled, driverName] = match;
+                  return {
+                    ...acc,
+                    [driverName]: { enabled: !disabled },
+                  };
+                },
+                {} as { [driver: string]: { enabled: boolean } },
+              )
+            : Object.entries(options.drivers as { [name: string]: boolean }).reduce(
+                (acc, [name, enabled]) => {
+                  return {
+                    ...acc,
+                    [name]: { enabled },
+                  };
+                },
+                {} as { [driver: string]: { enabled: boolean } },
+              );
+
           return {
             name,
             enabled: true,
-            drivers: drivers.map((driverName) => {
-              const dialect = driverToDialect(driverName);
-              const drizzleConfig = drizzleConfigs.find((config) => {
-                return config.name == name && config.dialect == dialect;
-              });
-              return {
-                name: driverName,
-                dialect,
-                imports: {
-                  connector: `nitro-drizzle/drivers/${driverName}`,
-                  helpers: `nitro-drizzle/dialects/${dialect}`,
-                  schema: drizzleConfig?.imports.schema || [],
-                },
-                migrations: {
-                  ...drizzleConfig?.migrations,
-                },
-              };
-            }),
+            drivers: Object.entries(connectorOptions)
+              .map(([driverName, options]) => {
+                const dialect = driverToDialect(driverName);
+                const drizzleConfig = drizzleConfigs.find((config) => {
+                  return config.name == name && config.dialect == dialect;
+                });
+                return {
+                  enabled: options.enabled,
+                  name: driverName,
+                  dialect,
+                  imports: {
+                    connector: `nitro-drizzle/drivers/${driverName}`,
+                    helpers: `nitro-drizzle/dialects/${dialect}`,
+                    schema: drizzleConfig?.imports.schema || [],
+                  },
+                  migrations: {
+                    ...drizzleConfig?.migrations,
+                  },
+                };
+              })
+              .sort((a, b) => (b.enabled ? 1 : 0) - (a.enabled ? 1 : 0)),
           } satisfies DatasourceInfo;
         },
       );
@@ -175,7 +196,7 @@ class DefaultContext implements Context {
             let msg = [datasource.name];
             let color: ColorName;
             if (datasource.enabled) {
-              color = "greenBright";
+              color = "yellow";
             } else {
               color = "gray";
               msg.push("(disabled)");
@@ -193,14 +214,22 @@ class DefaultContext implements Context {
         enabledDatasources
           .map((datasource) => {
             return [
-              colorize("greenBright", datasource.name),
-              colorize(
-                "yellow",
-                "(" + datasource.drivers.map((driver) => driver.name).join(", ") + ")",
-              ),
+              "\n\t",
+              colorize("yellow", datasource.name),
+              "(" +
+                datasource.drivers
+                  .map((driver) => {
+                    const [color, postfix] = driver.enabled
+                      ? (["greenBright", ""] as const)
+                      : (["strikethrough", " (types only)"] as const);
+
+                    return colorize("gray", [colorize(color, driver.name), postfix].join(""));
+                  })
+                  .join(", ") +
+                ")",
             ].join(" ");
           })
-          .join(", "),
+          .join(""),
       );
 
       this.#datasources = datasources;
@@ -456,6 +485,7 @@ export interface DatasourceInfo {
 
 /** Options for a specific driver within a datasource. */
 export type DriverOptions = {
+  enabled: boolean;
   name: string;
   dialect: string;
   imports: {
