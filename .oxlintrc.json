@@ -4,7 +4,15 @@
   "categories": {
     "correctness": "error"
   },
-  "rules": {},
+  "rules": {
+    "eslint/no-unused-vars": [
+      "error",
+      {
+        "varsIgnorePattern": "^_",
+        "argsIgnorePattern": "^_"
+      }
+    ]
+  },
   "env": {
     "builtin": true
   }
