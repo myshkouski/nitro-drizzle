@@ -61,30 +61,30 @@
     "nitropack": "catalog:",
     "ohash": "^2.0.12",
     "pathe": "^2.0.3",
-    "rollup": "^4.63.0",
+    "rollup": "^4.68.2",
     "strip-indent": "^4.1.1",
     "tinyglobby": "^0.2.17",
-    "unstorage": "^1.17.5"
+    "unstorage": "^1.17.6"
   },
   "devDependencies": {
     "@arethetypeswrong/core": "^0.18.5",
     "@testcontainers/mysql": "catalog:testcontainers",
     "@testcontainers/postgresql": "catalog:testcontainers",
-    "@types/node": "^26.3.0",
-    "@vitest/coverage-v8": "^4.1.11",
-    "@vitest/ui": "^4.1.11",
+    "@types/node": "^26.6.6",
+    "@vitest/coverage-v8": "^4.1.12",
+    "@vitest/ui": "^4.1.12",
     "changelogen": "^0.6.2",
-    "lefthook": "^2.1.10",
+    "lefthook": "^2.2.2",
     "listhen": "^1.10.1",
-    "oxfmt": "^0.65.0",
-    "oxlint": "^1.80.0",
-    "oxlint-tsgolint": "^7.0.2001",
-    "publint": "^0.3.24",
+    "oxfmt": "^0.78.0",
+    "oxlint": "^1.93.0",
+    "oxlint-tsgolint": "^7.0.2006",
+    "publint": "^0.3.25",
     "testcontainers": "catalog:testcontainers",
-    "tsdown": "^0.22.14",
+    "tsdown": "^0.23.7",
     "typescript": "^7.0.2",
     "unplugin-unused": "^0.6.0",
-    "vitest": "^4.1.11",
+    "vitest": "^4.1.12",
     "wrangler": "catalog:"
   },
   "peerDependencies": {
@@ -115,5 +115,5 @@
       "optional": true
     }
   },
-  "packageManager": "pnpm@11.24.0+sha512.bd27e345e976dcb0be0b7a1228217b049a817e21b1f355c90dbe7dc46671895a8bc1e6d06c24554505ea93ea0b45f489a27ec1bfbc8de6a9659fca0f16fa0000"
+  "packageManager": "pnpm@12.19.0+sha512.87327b6619853205834e4be59ba3a231e303d9f5e435912ede3312b7539b79af890942f6513b05a4690745666888045c09b33fc420c2cd2d3bd95c01ba21dbeb"
 }

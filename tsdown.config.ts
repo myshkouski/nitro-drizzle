@@ -25,9 +25,7 @@ export default defineConfig({
   deps: {
     neverBundle: [/^(virtual:|#)?nitro-drizzle\//],
   },
-  dts: {
-    tsgo: true,
-  },
+  dts: true,
   unbundle: true,
   unused: true,
   publint: true,
