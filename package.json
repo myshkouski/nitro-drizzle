@@ -61,7 +61,7 @@
     "nitropack": "catalog:",
     "ohash": "^2.0.12",
     "pathe": "^2.0.3",
-    "rollup": "^4.68.2",
+    "rollup": "^4.68.8",
     "strip-indent": "^4.1.1",
     "tinyglobby": "^0.2.17",
     "unstorage": "^1.17.6"
@@ -70,15 +70,15 @@
     "@arethetypeswrong/core": "^0.18.5",
     "@testcontainers/mysql": "catalog:testcontainers",
     "@testcontainers/postgresql": "catalog:testcontainers",
-    "@types/node": "^26.6.6",
+    "@types/node": "^26.6.10",
     "@vitest/coverage-v8": "^4.1.12",
     "@vitest/ui": "^4.1.12",
     "changelogen": "^0.6.2",
-    "lefthook": "^2.2.2",
+    "lefthook": "^2.2.3",
     "listhen": "^1.10.1",
-    "oxfmt": "^0.78.0",
-    "oxlint": "^1.93.0",
-    "oxlint-tsgolint": "^7.0.2006",
+    "oxfmt": "^0.80.0",
+    "oxlint": "^1.95.0",
+    "oxlint-tsgolint": "^7.0.2008",
     "publint": "^0.3.25",
     "testcontainers": "catalog:testcontainers",
     "tsdown": "^0.23.7",
@@ -115,5 +115,5 @@
       "optional": true
     }
   },
-  "packageManager": "pnpm@12.19.0+sha512.87327b6619853205834e4be59ba3a231e303d9f5e435912ede3312b7539b79af890942f6513b05a4690745666888045c09b33fc420c2cd2d3bd95c01ba21dbeb"
+  "packageManager": "pnpm@12.23.0+sha512.02da94ffaf133f46074322afe552f90d40b5f71ae259aefbccdacc5085b1d617e98d65e0131f5748b9b67445978ee5055d7d59a473f1eef0d504854fefcd5975"
 }
