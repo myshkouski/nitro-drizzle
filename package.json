@@ -37,7 +37,7 @@
     "./package.json": "./package.json"
   },
   "scripts": {
-    "build": "tsdown",
+    "prepack": "tsdown",
     "build:dev": "tsdown --watch",
     "fmt": "oxfmt",
     "fmt:check": "oxfmt --check",

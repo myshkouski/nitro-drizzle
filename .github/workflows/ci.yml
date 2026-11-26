@@ -25,7 +25,7 @@ jobs:
           node-version: lts/*
           cache: pnpm
       - run: pnpm install
-      - run: pnpm -w build
+      - run: pnpm -w prepack
       - run: pnpm -r dev:prepare
       - run: pnpm -w typecheck
       - run: pnpm -r typecheck
@@ -52,6 +52,6 @@ jobs:
           cache: pnpm
           registry-url: "https://registry.npmjs.org"
       - run: pnpm install
-      - run: pnpm build
+      - run: pnpm -w prepack
       - name: Publish to npm
         run: pnpm publish --no-git-checks --provenance --tag latest
